@@ -1,3 +1,19 @@
+Вимоги: Node >= 20, pnpm (вказано у `packageManager`), встановити залежності в корені.
+
+```bash
+pnpm i
+
+# Запустити лише застосунок landing
+pnpm dev -F landing
+
+# Або запустити всі застосунки через turbo
+pnpm dev
+
+# Білд/старт для конкретного застосунку
+pnpm build -F landing
+pnpm --filter landing start
+```
+
 # shadcn/ui monorepo template
 
 This template is for creating a monorepo with shadcn/ui.

@@ -1,9 +1,18 @@
 import "@workspace/ui/globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { Geist_Mono } from "next/font/google";
 
-const fontSans = Geist({
-  subsets: ["latin"],
+const ukraineSans = localFont({
   variable: "--font-sans",
+  display: "swap",
+  src: [
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-Thin.otf",        weight: "100", style: "normal" },
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-UltraLight.otf",  weight: "200", style: "normal" },
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-Light.otf",       weight: "300", style: "normal" },
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-Regular.otf",     weight: "400", style: "normal" },
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-Medium.otf",      weight: "500", style: "normal" },
+    { path: "../../public/fonts/e-Ukraine/e-Ukraine-Bold.otf",        weight: "700", style: "normal" }
+  ],
 });
 
 const fontMono = Geist_Mono({
@@ -19,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+        className={`${ukraineSans.variable} ${fontMono.variable} font-sans antialiased`}
       >
         {children}
       </body>

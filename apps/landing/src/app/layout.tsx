@@ -1,6 +1,7 @@
 import "@workspace/ui/globals.css";
 import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";
+import Header from "../business/components/Header";
 
 const ukraineSans = localFont({
   variable: "--font-sans",
@@ -28,8 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${ukraineSans.variable} ${fontMono.variable} font-sans antialiased`}
+        className={`${ukraineSans.variable} ${fontMono.variable} font-sans antialiased pt-[92px]`}
       >
+        <Header />
         {children}
       </body>
     </html>

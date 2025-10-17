@@ -19,7 +19,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "hover:bg-black/5 hover:text-accent-foreground dark:hover:bg-white/10",
         glass:
           "bg-primary/10 text-primary-foreground shadow-lg backdrop-blur-sm",
         white: "bg-white text-black shadow-lg",
@@ -32,6 +32,7 @@ const buttonVariants = cva(
         icon: "size-9",
       },
       shadow: {
+        none: "shadow-none",
         xs: "shadow-xs",
         sm: "shadow-sm",
         md: "shadow-md",
@@ -56,7 +57,7 @@ function Button({
   className,
   variant,
   size,
-  shadow = "xs",
+  shadow = "none",
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &

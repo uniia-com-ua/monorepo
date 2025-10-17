@@ -1,4 +1,4 @@
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "@workspace/ui/components/base/button";
 import {
   Drawer,
   DrawerClose,

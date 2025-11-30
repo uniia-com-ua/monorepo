@@ -17,8 +17,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
       {/* Контент */}
-      <div className="relative z-10 container mx-auto mt-[calc(100vh-700px)] px-4 text-center flex flex-col items-center justify-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 max-w-2xl">
+      <div className="relative z-10 max-w-container mx-auto mt-[calc(100vh-700px)] px-4 text-center flex flex-col items-center justify-center">
+        <h1 className="text-5xl md:text-6xl text-white mb-4 max-w-2xl">
           Карбуй освіту
         </h1>
         <p className="text-md text-gray-200 mb-8">

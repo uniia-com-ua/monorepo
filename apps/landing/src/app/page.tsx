@@ -5,7 +5,7 @@ import Hero from "../business/components/Hero";
 
 export default function Page() {
   return (
-    <div className="container max-w-7xl px-4 mx-auto flex flex-col items-center justify-center">
+    <div className="container max-w-container px-4 mx-auto flex flex-col items-center justify-center">
       <Hero />
       <div className="w-full h-[1000px]">
         

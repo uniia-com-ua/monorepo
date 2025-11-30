@@ -125,3 +125,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .max-w-container {
+    max-width: 1440px;
+  }
+}

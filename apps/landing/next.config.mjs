@@ -4,8 +4,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cms.uniia.com.ua',
+        protocol: "https",
+        hostname: "cms.uniia.com.ua",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },

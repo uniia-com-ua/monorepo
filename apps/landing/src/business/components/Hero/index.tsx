@@ -1,9 +1,29 @@
+"use client";
+
+import { useCallback } from "react";
 import { Button } from "@workspace/ui/components/base/button";
 import Image from "next/image";
 
 export default function Hero() {
+  const scrollToAbout = useCallback(() => {
+    const section = document.getElementById("about");
+    if (!section) return;
+
+    const yOffset = 100;
+    const y =
+      section.getBoundingClientRect().top + window.scrollY - yOffset;
+
+    window.scrollTo({
+      top: y > 0 ? y : 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
-    <div className={`relative w-full h-[calc(100vh-182px)] flex items-center rounded-[3rem] justify-center overflow-hidden`}>
+    <div
+      id="hero"
+      className={`relative w-full h-[calc(100vh-182px)] flex items-center rounded-[3rem] justify-center overflow-hidden`}
+    >
       {/* Фонове зображення */}
       <Image
         src="https://cms.uniia.com.ua/uploads/large_main_image_62cce1a3bf.webp"
@@ -24,14 +44,14 @@ export default function Hero() {
         <h1 className="text-[2.5rem] md:text-[3.5rem] text-white mb-1 max-w-2xl">
           Карбуй освіту
         </h1>
-        <p className="text-[13px] font-light text-gray-200 mb-6">
+        <p className="text-base md:text-lg font-light text-gray-200 mb-6">
           Перша онлайн-платформа для студентів українських університетів <Image src="/icons/ua-flag.svg" alt="Ukraine" width={20} height={20} className="inline-block mb-0.5" />
         </p>
         <div className="flex gap-4 flex-wrap justify-center">
-          <Button>
+          <Button type="button" onClick={() => scrollToAbout()}>
             Розпочати
           </Button>
-          <Button variant="glass">
+          <Button type="button" variant="glass" onClick={scrollToAbout}>
             Дізнатись більше
           </Button>
         </div>

@@ -1,71 +1,42 @@
 "use client";
 
 import { Button } from "@workspace/ui/components/base/button";
-import { useCallback } from "react";
+import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 
-type CardConfig = {
+export interface AboutCard {
+  id: string;
   title: string;
   description: string;
   variant: "light" | "dark";
   cta?: string;
-};
+  scrollTarget?: string;
+}
 
-const cards: CardConfig[] = [
-  {
-    title: "Наша місія — сучасна цифрова освіта для кожного",
-    description:
-      "Унія — це простір, у якому освіта стає стилем життя. Ми віримо, що якісна освіта має бути доступною, інтерактивною та цікавою.",
-    variant: "light",
-    cta: "Дізнатись більше",
-  },
-  {
-    title: "Разом змінюємо освіту",
-    description:
-      "Викладачі, студенти, дослідники та всі, хто цінує якісні знання, можуть долучитися, обмінюватися досвідом і розвивати освіту разом із нами.",
-    variant: "dark",
-  },
-  {
-    title: "Проводимо онлайн та офлайн лекції",
-    description:
-      "Організовуємо лекції онлайн і офлайн для вашого комфорту та зручності навчання.",
-    variant: "dark",
-  },
-  {
-    title: "Створюємо онлайн-платформу для студентів",
-    description:
-      "Об’єднуємо знання та інновації, щоб зробити навчання доступним і зручним для кожного студента.",
-    variant: "light",
-    cta: "Розпочати",
-  },
-];
+export interface AboutProps {
+  heading?: string;
+  subheading?: string;
+  cards: AboutCard[];
+}
 
-export default function About() {
-  const scrollToTeam = useCallback(() => {
-    const section = document.getElementById("team");
-    if (!section) return;
-
-    const yOffset = 100;
-    const y =
-      section.getBoundingClientRect().top + window.scrollY - yOffset;
-
-    window.scrollTo({
-      top: y > 0 ? y : 0,
-      behavior: "smooth",
-    });
-  }, []);
+export default function About({
+  heading = "Про Унію",
+  subheading,
+  cards,
+}: AboutProps) {
+  const scrollTo = useScrollTo();
 
   return (
-    <section id="about" className="w-full mt-10">
-      <div className="w-full rounded-[3rem] bg-[#f4f5f7] p-11 shadow-[0_30px_80px_rgba(5,6,26,0.08)]">
+    <section id="about" className="w-full mt-section-gap">
+      <div className="w-full rounded-section bg-section-bg p-6 md:p-10 lg:p-14 shadow-section">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-[2.75rem] text-[#05061a] font-semibold">
-            Про Унію
+          <h2 className="text-3xl md:text-4xl text-foreground font-semibold">
+            {heading}
           </h2>
-          <p className="text-base md:text-lg text-gray-500 mt-4">
-            Ми створюємо екосистему, де освіта поєднує технології та людей.
-            Кожен може долучитись, поділитись досвідом та прокачати свої
-            навички.
-          </p>
+          {subheading && (
+            <p className="text-base md:text-lg text-muted-foreground mt-4">
+              {subheading}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -74,22 +45,35 @@ export default function About() {
 
             return (
               <article
-                key={card.title}
+                key={card.id}
                 className={[
-                  "rounded-[2rem] p-6 md:p-8 flex flex-col gap-6",
+                  "rounded-4xl p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden",
                   isDark
-                    ? "bg-[#05061a] text-white shadow-[0_25px_60px_rgba(5,6,26,0.35)]"
-                    : "bg-white text-[#05061a] shadow-[0_20px_40px_rgba(5,6,26,0.08)]",
+                    ? "bg-section-bg-dark text-white shadow-card-elevated"
+                    : "bg-card text-card-foreground shadow-card",
                 ].join(" ")}
               >
-                <div className="space-y-4">
+                {isDark && (
+                  <div
+                    className="pointer-events-none absolute inset-0"
+                    aria-hidden="true"
+                  >
+                    <div className="absolute -top-16 -right-16 w-[280px] h-[280px] rounded-full bg-gradient-to-br from-primary/50 via-primary/20 to-transparent blur-3xl animate-blob-1" />
+                    <div className="absolute -bottom-14 -left-14 w-[240px] h-[240px] rounded-full bg-gradient-to-tr from-highlight/40 via-highlight/10 to-transparent blur-3xl animate-blob-2" />
+                    <div className="absolute top-1/2 left-1/2 w-[320px] h-[180px] rounded-full bg-gradient-to-r from-primary/20 via-transparent to-highlight/20 blur-2xl animate-blob-3" />
+                  </div>
+                )}
+
+                <div
+                  className={isDark ? "relative z-10 space-y-4" : "space-y-4"}
+                >
                   <h3 className="text-2xl leading-tight font-medium">
                     {card.title}
                   </h3>
                   <p
                     className={[
                       "text-base leading-relaxed",
-                      isDark ? "text-white/70" : "text-gray-600",
+                      isDark ? "text-white/70" : "text-muted-foreground",
                     ].join(" ")}
                   >
                     {card.description}
@@ -97,14 +81,12 @@ export default function About() {
                 </div>
 
                 {card.cta && (
-                  <div className="pt-2">
+                  <div className={isDark ? "relative z-10 pt-2" : "pt-2"}>
                     <Button
                       variant={isDark ? "white" : "default"}
-                      className={isDark ? "text-[#05061a]" : ""}
                       onClick={
-                        card.title ===
-                        "Наша місія — сучасна цифрова освіта для кожного"
-                          ? scrollToTeam
+                        card.scrollTarget
+                          ? () => scrollTo(card.scrollTarget!)
                           : undefined
                       }
                     >
@@ -120,5 +102,3 @@ export default function About() {
     </section>
   );
 }
-
-

@@ -6,29 +6,29 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[13px] font-light leading-normal transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer relative overflow-hidden",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-light leading-normal transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:border-destructive cursor-pointer relative overflow-hidden",
   {
     variants: {
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-lg",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
-          "hover:bg-black/5 hover:text-accent-foreground dark:hover:bg-white/10",
+          "hover:bg-black/5 hover:text-accent-foreground",
         glass:
           "bg-white/10 text-primary-foreground shadow-lg backdrop-blur-sm",
         white: "bg-white text-black shadow-lg",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        sm: "px-4 py-2 text-[12px] has-[>svg]:px-3",
+        sm: "px-4 py-2 text-xs has-[>svg]:px-3",
         default: "px-6 py-3 has-[>svg]:px-5",
-        lg: "px-8 py-4 text-[14px] has-[>svg]:px-7",
+        lg: "px-8 py-4 text-base has-[>svg]:px-7",
         icon: "size-9",
       },
       shadow: {

@@ -1,33 +1,33 @@
 "use client";
 
-import { useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@workspace/ui/components/base/button";
+import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 
-const NAV_ITEMS = [
-  { label: "Про проєкт", target: "about" },
-  { label: "Команда", target: "team" },
-  { label: "Блог", target: "blog" },
-] as const;
+export interface HeaderNavItem {
+  label: string;
+  href?: string;
+  scrollTo?: string;
+}
 
-function Header() {
-  const handleScroll = useCallback((target: string) => {
-    const section = document.getElementById(target);
-    if (!section) return;
+export interface HeaderCtaButton {
+  text: string;
+  href?: string;
+  scrollTo?: string;
+}
 
-    const yOffset = 100;
-    const y =
-      section.getBoundingClientRect().top + window.scrollY - yOffset;
+export interface HeaderProps {
+  logoUrl?: string;
+  navItems?: HeaderNavItem[];
+  ctaButton?: HeaderCtaButton;
+}
 
-    window.scrollTo({
-      top: y > 0 ? y : 0,
-      behavior: "smooth",
-    });
-  }, []);
+export default function Header({ logoUrl, navItems = [], ctaButton }: HeaderProps) {
+  const scrollTo = useScrollTo();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-background/70 backdrop-blur-sm h-[92px]">
+    <header className="fixed inset-x-0 top-0 z-50 bg-background/70 backdrop-blur-sm h-(--header-height)">
       <div className="mx-auto max-w-container px-4 flex h-full gap-5 items-center justify-between">
         <div className="flex items-center gap-9">
           <Link
@@ -36,7 +36,7 @@ function Header() {
             aria-label="Унія"
           >
             <Image
-              src="/icons/Logo.svg"
+              src={logoUrl || "/icons/Logo.svg"}
               alt="Унія"
               width={104}
               height={44}
@@ -44,35 +44,52 @@ function Header() {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-5">
-            {NAV_ITEMS.map((item) => (
-              <Button
-                key={item.target}
-                variant="ghost"
-                type="button"
-                onClick={() => handleScroll(item.target)}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </nav>
+          {navItems.length > 0 && (
+            <nav className="hidden md:flex items-center gap-5">
+              {navItems.map((item, i) => (
+                <Button
+                  key={i}
+                  variant="ghost"
+                  type="button"
+                  onClick={
+                    item.scrollTo
+                      ? () => scrollTo(item.scrollTo!)
+                      : undefined
+                  }
+                  {...(item.href && !item.scrollTo
+                    ? { asChild: true }
+                    : {})}
+                >
+                  {item.href && !item.scrollTo ? (
+                    <Link href={item.href}>{item.label}</Link>
+                  ) : (
+                    item.label
+                  )}
+                </Button>
+              ))}
+            </nav>
+          )}
         </div>
 
         <div className="flex items-center gap-5">
           <Button variant="ghost" type="button">
             ENG
           </Button>
-          <Button
-            variant="secondary"
-            type="button"
-            onClick={() => handleScroll("blog")}
-          >
-            Розпочати
-          </Button>
+          {ctaButton && (
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={
+                ctaButton.scrollTo
+                  ? () => scrollTo(ctaButton.scrollTo!)
+                  : undefined
+              }
+            >
+              {ctaButton.text}
+            </Button>
+          )}
         </div>
       </div>
     </header>
   );
 }
-
-export default Header;

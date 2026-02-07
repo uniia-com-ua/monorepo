@@ -3,48 +3,78 @@
 import { useCallback, useState } from "react";
 import { Button } from "@workspace/ui/components/base/button";
 
-export default function Feedback() {
+export interface FeedbackProps {
+  title: string;
+  subtitle?: string;
+  benefitsHeading?: string;
+  benefits?: string[];
+}
+
+export default function Feedback({
+  title,
+  subtitle,
+  benefitsHeading = "Що отримаєш",
+  benefits = [],
+}: FeedbackProps) {
   const [status, setStatus] = useState<"idle" | "sent">("idle");
 
-  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setStatus("sent");
-    event.currentTarget.reset();
-    setTimeout(() => setStatus("idle"), 4000);
-  }, []);
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setStatus("sent");
+      event.currentTarget.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+    },
+    []
+  );
 
   return (
-    <section id="contact" className="w-full mt-5 mb-12">
-      <div className="w-full rounded-[3rem] bg-[#05061a] text-white p-6 md:p-10 lg:p-14 shadow-[0_30px_80px_rgba(5,6,26,0.35)]">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
+    <section id="contact" className="w-full mt-section-gap mb-12">
+      <div className="w-full rounded-section bg-section-bg-dark text-white p-6 md:p-10 lg:p-14 shadow-section-dark relative overflow-hidden">
+        {/* Decorative gradient shapes */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+        >
+          <div className="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-gradient-to-br from-primary/50 via-primary/20 to-transparent blur-3xl animate-blob-1" />
+          <div className="absolute -bottom-20 -left-20 w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-highlight/40 via-highlight/10 to-transparent blur-3xl animate-blob-2" />
+          <div className="absolute top-1/2 left-1/2 w-[500px] h-[300px] rounded-full bg-gradient-to-r from-primary/20 via-transparent to-highlight/20 blur-2xl animate-blob-3" />
+          <div className="absolute top-10 left-16 w-20 h-20 rounded-full bg-primary/35 blur-xl animate-blob-4" />
+        </div>
+
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
           <div className="space-y-6">
-            <h2 className="text-3xl md:text-[2.75rem] font-semibold leading-tight">
-              Маєш ідеї або хочеш долучитися?
+            <h2 className="text-3xl md:text-4xl font-semibold leading-tight">
+              {title}
             </h2>
-            <p className="text-base md:text-lg text-white/80">
-              Напиши нам, якщо хочеш стати ментором, поділитися кейсом чи
-              запропонувати співпрацю. Ми відповімо протягом найближчих днів.
-            </p>
-            <div
-              className="inline-block bg-white/95 text-[#05061a] m-8 px-6 py-4 rounded-[1.5rem] shadow-[0_20px_50px_rgba(5,6,26,0.35)] rotate-4 relative"
-              style={{ transformOrigin: "left top" }}
-            >
-              <div className="absolute -top-3 -left-3 size-6 bg-[#FFB703] rounded-full shadow-md" />
-              <p className="text-lg font-semibold mb-3">Що отримаєш</p>
-              <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
-                <li>Особисту відповідь від команди</li>
-                <li>Наступні кроки щодо співпраці</li>
-                <li>Доступ до спільноти Унії</li>
-              </ul>
-            </div>
+            {subtitle && (
+              <p className="text-base md:text-lg text-white/80">{subtitle}</p>
+            )}
+            {benefits.length > 0 && (
+              <div
+                className="inline-block bg-white/95 text-foreground m-8 px-6 py-4 rounded-3xl shadow-popup rotate-4 relative"
+                style={{ transformOrigin: "left top" }}
+              >
+                <div className="absolute -top-3 -left-3 size-6 bg-highlight rounded-full shadow-md" />
+                <p className="text-lg font-semibold mb-3">{benefitsHeading}</p>
+                <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
+                  {benefits.map((benefit, i) => (
+                    <li key={i}>{benefit}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-[2rem] shadow-[0_20px_40px_rgba(5,6,26,0.25)] p-6 md:p-8 flex flex-col gap-5 text-[#05061a]"
+            className="bg-card rounded-4xl shadow-form p-6 md:p-8 flex flex-col gap-5 text-card-foreground"
           >
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-section-text-subtle"
+              >
                 Імʼя та прізвище
               </label>
               <input
@@ -52,12 +82,15 @@ export default function Feedback() {
                 name="name"
                 required
                 placeholder="Олександр Шевченко"
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-[#05061a] outline-none focus:ring-2 focus:ring-[#146EF4]/40 focus:border-[#146EF4]"
+                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-section-text-subtle"
+              >
                 Електронна пошта
               </label>
               <input
@@ -66,12 +99,15 @@ export default function Feedback() {
                 type="email"
                 required
                 placeholder="name@uniia.com"
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-[#05061a] outline-none focus:ring-2 focus:ring-[#146EF4]/40 focus:border-[#146EF4]"
+                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="message"
+                className="text-sm font-medium text-section-text-subtle"
+              >
                 Повідомлення
               </label>
               <textarea
@@ -80,7 +116,7 @@ export default function Feedback() {
                 required
                 rows={4}
                 placeholder="Розкажіть коротко про свою пропозицію або питання..."
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-[#05061a] outline-none focus:ring-2 focus:ring-[#146EF4]/40 focus:border-[#146EF4] resize-none"
+                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary resize-none"
               />
             </div>
 
@@ -89,7 +125,7 @@ export default function Feedback() {
                 Надіслати повідомлення
               </Button>
               {status === "sent" && (
-                <p className="text-sm text-green-500">
+                <p className="text-sm text-success">
                   Дякуємо! Ми скоро з вами звʼяжемось.
                 </p>
               )}
@@ -100,5 +136,3 @@ export default function Feedback() {
     </section>
   );
 }
-
-

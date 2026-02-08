@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "@workspace/ui/components/base/button";
+import { useInView } from "@workspace/ui/hooks/use-in-view";
+import { cn } from "@workspace/ui/lib/utils";
 
 export interface TeamStat {
   value: string;
@@ -11,6 +15,8 @@ export interface TeamProps {
   subheading?: string;
   image?: string;
   imageAlt?: string;
+  /** Base64 blur placeholder for image */
+  imageBlurData?: string;
   infoTitle?: string;
   infoDescription?: string;
   stats?: TeamStat[];
@@ -24,6 +30,7 @@ export default function Team({
   subheading,
   image,
   imageAlt = "Команда Унії на зустрічі",
+  imageBlurData,
   infoTitle,
   infoDescription,
   stats = [],
@@ -31,10 +38,19 @@ export default function Team({
   ctaDescription,
   ctaButtonText,
 }: TeamProps) {
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    threshold: 0.1,
+  });
+
   return (
-    <section id="team" className="w-full mt-section-gap">
+    <section ref={sectionRef} id="team" className="w-full mt-section-gap">
       <div className="w-full rounded-section bg-section-bg p-6 md:p-10 lg:p-14 shadow-section space-y-10">
-        <div className="text-center max-w-3xl mx-auto">
+        <div
+          className={cn(
+            "text-center max-w-3xl mx-auto animate-on-scroll",
+            isInView && "is-visible"
+          )}
+        >
           <h2 className="text-3xl md:text-4xl text-foreground font-semibold">
             {heading}
           </h2>
@@ -47,19 +63,30 @@ export default function Team({
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 items-stretch">
           {image && (
-            <div className="relative min-h-[260px] md:min-h-[320px] lg:min-h-[380px] rounded-4xl overflow-hidden shadow-card-elevated">
+            <div
+              className={cn(
+                "relative min-h-[260px] md:min-h-[320px] lg:min-h-[380px] rounded-4xl overflow-hidden shadow-card-elevated animate-on-scroll stagger-2",
+                isInView && "is-visible"
+              )}
+            >
               <Image
                 src={image}
                 alt={imageAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 60vw"
-                priority
+                placeholder={imageBlurData ? "blur" : "empty"}
+                blurDataURL={imageBlurData}
               />
             </div>
           )}
 
-          <article className="bg-card rounded-4xl shadow-card p-6 md:p-8 flex flex-col gap-6">
+          <article
+            className={cn(
+              "bg-card rounded-4xl shadow-card p-6 md:p-8 flex flex-col gap-6 animate-on-scroll stagger-3",
+              isInView && "is-visible"
+            )}
+          >
             <div className="flex items-center">
               <Image
                 src="/icons/heart_pulse.svg"
@@ -106,7 +133,10 @@ export default function Team({
         {ctaTitle && (
           <div
             id="blog"
-            className="bg-card rounded-4xl shadow-popup p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+            className={cn(
+              "bg-card rounded-4xl shadow-popup p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 animate-on-scroll stagger-4",
+              isInView && "is-visible"
+            )}
           >
             <div>
               <h3 className="text-2xl text-foreground font-medium mb-3">

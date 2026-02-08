@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useInView } from "@workspace/ui/hooks/use-in-view";
+import { cn } from "@workspace/ui/lib/utils";
 
 export interface FaqItemData {
   id: string;
@@ -15,6 +17,9 @@ export interface FaqProps {
 
 export default function Faq({ heading = "Питання і відповіді", items }: FaqProps) {
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    threshold: 0.1,
+  });
 
   const toggle = (id: string) => {
     setOpenIds((prev) => {
@@ -29,19 +34,31 @@ export default function Faq({ heading = "Питання і відповіді", 
   };
 
   return (
-    <section id="faq" className="w-full mt-section-gap px-6 md:px-10 lg:px-14">
-      <div className="text-center max-w-3xl mx-auto mb-12">
+    <section ref={sectionRef} id="faq" className="w-full mt-section-gap px-6 md:px-10 lg:px-14">
+      <div
+        className={cn(
+          "text-center max-w-3xl mx-auto mb-12 animate-on-scroll",
+          isInView && "is-visible"
+        )}
+      >
         <h2 className="text-3xl md:text-4xl text-foreground font-semibold">
           {heading}
         </h2>
       </div>
 
       <div className="mx-auto divide-y divide-border">
-        {items.map((item) => {
+        {items.map((item, index) => {
           const isOpen = openIds.has(item.id);
 
           return (
-            <div key={item.id}>
+            <div
+              key={item.id}
+              className={cn(
+                "animate-on-scroll",
+                isInView && "is-visible",
+                `stagger-${Math.min(index + 2, 6)}`
+              )}
+            >
               <button
                 type="button"
                 onClick={() => toggle(item.id)}

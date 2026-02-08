@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from "react";
 import { Button } from "@workspace/ui/components/base/button";
+import { useInView } from "@workspace/ui/hooks/use-in-view";
+import { cn } from "@workspace/ui/lib/utils";
 
 export interface FeedbackProps {
   title: string;
@@ -17,6 +19,9 @@ export default function Feedback({
   benefits = [],
 }: FeedbackProps) {
   const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    threshold: 0.1,
+  });
 
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +34,7 @@ export default function Feedback({
   );
 
   return (
-    <section id="contact" className="w-full mt-section-gap mb-12">
+    <section ref={sectionRef} id="contact" className="w-full mt-section-gap mb-12">
       <div className="w-full rounded-section bg-section-bg-dark text-white p-6 md:p-10 lg:p-14 shadow-section-dark relative overflow-hidden">
         {/* Decorative gradient shapes */}
         <div
@@ -43,7 +48,12 @@ export default function Feedback({
         </div>
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-start">
-          <div className="space-y-6">
+          <div
+            className={cn(
+              "space-y-6 animate-on-scroll",
+              isInView && "is-visible"
+            )}
+          >
             <h2 className="text-3xl md:text-4xl font-semibold leading-tight">
               {title}
             </h2>
@@ -68,7 +78,10 @@ export default function Feedback({
 
           <form
             onSubmit={handleSubmit}
-            className="bg-card rounded-4xl shadow-form p-6 md:p-8 flex flex-col gap-5 text-card-foreground"
+            className={cn(
+              "bg-card rounded-4xl shadow-form p-6 md:p-8 flex flex-col gap-5 text-card-foreground animate-on-scroll stagger-2",
+              isInView && "is-visible"
+            )}
           >
             <div className="space-y-2">
               <label

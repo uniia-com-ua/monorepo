@@ -199,3 +199,99 @@
     animation: blob-drift-4 10s ease-in-out infinite;
   }
 }
+
+/* Scroll-triggered animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Aggressive card animation with bounce */
+@keyframes card-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.85) rotate(-2deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.02) rotate(0.5deg);
+  }
+  80% {
+    transform: translateY(5px) scale(0.99) rotate(-0.25deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+@layer utilities {
+  /* Base state - hidden */
+  .animate-on-scroll {
+    opacity: 0;
+  }
+
+  /* Animated state */
+  .animate-on-scroll.is-visible {
+    animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .animate-fade-in.is-visible {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in.is-visible {
+    animation: scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Aggressive card animation */
+  .animate-card-pop.is-visible {
+    animation: card-pop-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Staggered delays for children */
+  .stagger-1 { animation-delay: 0ms; }
+  .stagger-2 { animation-delay: 150ms; }
+  .stagger-3 { animation-delay: 300ms; }
+  .stagger-4 { animation-delay: 450ms; }
+  .stagger-5 { animation-delay: 600ms; }
+  .stagger-6 { animation-delay: 750ms; }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll,
+    .animate-on-scroll.is-visible,
+    .animate-fade-in.is-visible,
+    .animate-scale-in.is-visible {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

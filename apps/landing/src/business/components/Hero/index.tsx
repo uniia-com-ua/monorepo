@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useCallback } from "react";
 import { Button } from "@workspace/ui/components/base/button";
 import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 import Image from "next/image";
@@ -15,31 +16,70 @@ export interface HeroProps {
   title: string;
   subtitle: string;
   backgroundImage?: string;
+  /** Base64 blur placeholder for background image */
+  backgroundBlurData?: string;
   ctaButtons?: CtaButton[];
+  /** Parallax intensity (0 = no effect, 0.5 = default, 1 = full speed) */
+  parallaxSpeed?: number;
 }
 
 export default function Hero({
   title,
   subtitle,
   backgroundImage,
+  backgroundBlurData,
   ctaButtons = [],
+  parallaxSpeed = 0.4,
 }: HeroProps) {
   const scrollTo = useScrollTo();
+  const imageRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  const handleScroll = useCallback(() => {
+    if (rafRef.current) return;
+
+    rafRef.current = requestAnimationFrame(() => {
+      if (imageRef.current) {
+        const scrollY = window.scrollY;
+        const offset = scrollY * parallaxSpeed;
+        imageRef.current.style.transform = `translate3d(0, ${offset}px, 0)`;
+      }
+      rafRef.current = null;
+    });
+  }, [parallaxSpeed]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [handleScroll]);
 
   return (
     <div
       id="hero"
       className="relative w-full h-[calc(100vh-var(--header-height)*2)] flex items-center rounded-section justify-center overflow-hidden"
     >
-      {/* Фонове зображення */}
+      {/* Фонове зображення з паралаксом */}
       {backgroundImage && (
-        <Image
-          src={backgroundImage}
-          alt="Hero background"
-          fill
-          className="object-cover"
-          priority
-        />
+        <div
+          ref={imageRef}
+          className="absolute inset-0 will-change-transform"
+          style={{ top: "-20%", bottom: "-20%", height: "140%" }}
+        >
+          <Image
+            src={backgroundImage}
+            alt="Hero background"
+            fill
+            className="object-cover"
+            priority
+            placeholder={backgroundBlurData ? "blur" : "empty"}
+            blurDataURL={backgroundBlurData}
+          />
+        </div>
       )}
 
       {/* Напівпрозорий градієнт (нижня половина) */}

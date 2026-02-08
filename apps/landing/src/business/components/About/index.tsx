@@ -2,6 +2,8 @@
 
 import { Button } from "@workspace/ui/components/base/button";
 import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
+import { useInView } from "@workspace/ui/hooks/use-in-view";
+import { cn } from "@workspace/ui/lib/utils";
 
 export interface AboutCard {
   id: string;
@@ -24,11 +26,19 @@ export default function About({
   cards,
 }: AboutProps) {
   const scrollTo = useScrollTo();
+  const { ref: sectionRef, isInView } = useInView<HTMLElement>({
+    threshold: 0.1,
+  });
 
   return (
-    <section id="about" className="w-full mt-section-gap">
+    <section ref={sectionRef} id="about" className="w-full mt-section-gap">
       <div className="w-full rounded-section bg-section-bg p-6 md:p-10 lg:p-14 shadow-section">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div
+          className={cn(
+            "text-center max-w-3xl mx-auto mb-12 animate-on-scroll",
+            isInView && "is-visible"
+          )}
+        >
           <h2 className="text-3xl md:text-4xl text-foreground font-semibold">
             {heading}
           </h2>
@@ -40,18 +50,20 @@ export default function About({
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {cards.map((card) => {
+          {cards.map((card, index) => {
             const isDark = card.variant === "dark";
 
             return (
               <article
                 key={card.id}
-                className={[
-                  "rounded-4xl p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden",
+                className={cn(
+                  "rounded-4xl p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden animate-on-scroll animate-card-pop",
                   isDark
                     ? "bg-section-bg-dark text-white shadow-card-elevated"
                     : "bg-card text-card-foreground shadow-card",
-                ].join(" ")}
+                  isInView && "is-visible",
+                  `stagger-${index + 2}`
+                )}
               >
                 {isDark && (
                   <div

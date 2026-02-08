@@ -1,5 +1,6 @@
 import type { HeroBlock as HeroBlockData } from "@workspace/strapi";
 import { getStrapiMediaUrl } from "@workspace/strapi";
+import { heroShimmer } from "@workspace/ui/lib/shimmer";
 import Hero from "../../Hero";
 
 interface Props {
@@ -12,6 +13,7 @@ export default function HeroBlock({ data }: Props) {
       title={data.title}
       subtitle={data.subtitle}
       backgroundImage={getStrapiMediaUrl(data.backgroundImage?.url)}
+      backgroundBlurData={data.backgroundImage ? heroShimmer : undefined}
       ctaButtons={data.ctaButtons?.map((btn) => ({
         text: btn.text,
         href: btn.href,

@@ -79,7 +79,7 @@ export default function Header({
 
           {/* Desktop Navigation */}
           {navItems.length > 0 && (
-            <nav className="hidden md:flex items-center gap-5">
+            <nav className="hidden md:flex items-center gap-2 min-[820px]:gap-5">
               {navItems.map((item, i) => (
                 <Button
                   key={i}

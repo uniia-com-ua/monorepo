@@ -72,6 +72,7 @@ export default async function RootLayout({
           columns={global.footer.columns}
           socialLinks={global.footer.socialLinks}
           copyright={global.footer.copyright}
+          bottomLinks={global.footer.bottomLinks}
         />
       </body>
     </html>

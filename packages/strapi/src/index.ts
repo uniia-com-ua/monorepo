@@ -30,6 +30,8 @@ export type {
   StatItem,
   FeedbackFormBlock,
   BenefitItem,
+  FaqBlock,
+  FaqItem,
   // Page
   PageAttributes,
   // Blog

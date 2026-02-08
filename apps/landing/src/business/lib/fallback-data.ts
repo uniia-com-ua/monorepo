@@ -19,9 +19,30 @@ export const FALLBACK_GLOBAL: GlobalAttributes = {
     ctaButton: { text: "Розпочати", scrollTo: "blog" },
   },
   footer: {
-    columns: [],
-    socialLinks: [],
-    copyright: `© ${new Date().getFullYear()} Унія. Всі права захищені.`,
+    columns: [
+      {
+        title: "Унія",
+        links: [
+          { label: "Про проєкт", href: "/about" },
+          { label: "Команда", href: "/team" },
+          { label: "Блог", href: "/blog" },
+          { label: "Часті питання", href: "/faq" },
+        ],
+      },
+    ],
+    socialLinks: [
+      { platform: "Instagram", url: "https://instagram.com/uniia" },
+      { platform: "Facebook", url: "https://facebook.com/uniia" },
+      { platform: "LinkedIn", url: "https://linkedin.com/company/uniia" },
+    ],
+    copyright: `uniia.com.ua © ${new Date().getFullYear()}`,
+    bottomLinks: [
+      { label: "Про проєкт", href: "/about" },
+      { label: "Команда", href: "/team" },
+      { label: "Партнерам", href: "/partners" },
+      { label: "Блог", href: "/blog" },
+      { label: "Обробка персональних даних", href: "/privacy" },
+    ],
   },
   defaultSeo: {
     title: "Унія — Карбуй освіту",
@@ -125,6 +146,31 @@ export const FALLBACK_HOME_PAGE: PageAttributes = {
       ctaDescription:
         "Приєднуйся, щоб створювати нові освітні рішення, підтримувати студентів та розвивати цифрову культуру в університетах.",
       ctaButtonText: "Взяти участь",
+    },
+    {
+      __component: "blocks.faq",
+      id: 5,
+      heading: "Питання і відповіді",
+      items: [
+        {
+          id: 1,
+          question: "Як почати навчання?",
+          answer:
+            "Після швидкої реєстрації ви можете обрати свій курс та почати використовувати нашу платформу для власного навчання на повну",
+        },
+        {
+          id: 2,
+          question: "Чи є у вас мобільний застосунок?",
+          answer:
+            "Зараз ми працюємо над мобільною версією нашої платформи, щоб ви могли навчатися в будь-який зручний для вас час",
+        },
+        {
+          id: 3,
+          question: "Чи є обмеження на доступ до контенту?",
+          answer:
+            "Немає обмежень — вся інформація на платформі Унія є відкритою та безкоштовною для всіх користувачів",
+        },
+      ],
     },
     {
       __component: "blocks.feedback-form",

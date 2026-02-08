@@ -3,6 +3,7 @@ import HeroBlock from "./blocks/HeroBlock";
 import AboutCardsBlock from "./blocks/AboutCardsBlock";
 import TeamBlock from "./blocks/TeamBlock";
 import FeedbackFormBlock from "./blocks/FeedbackFormBlock";
+import FaqBlock from "./blocks/FaqBlock";
 
 type BlockComponent = React.ComponentType<{ data: never }>;
 
@@ -11,6 +12,7 @@ const blockComponents: Record<string, BlockComponent> = {
   "blocks.about-cards": AboutCardsBlock as BlockComponent,
   "blocks.team": TeamBlock as BlockComponent,
   "blocks.feedback-form": FeedbackFormBlock as BlockComponent,
+  "blocks.faq": FaqBlock as BlockComponent,
 };
 
 interface BlockRendererProps {

@@ -100,6 +100,7 @@ export interface GlobalFooter {
   columns: FooterColumn[];
   socialLinks: SocialLink[];
   copyright: string;
+  bottomLinks?: LinkComponent[];
 }
 
 export interface GlobalAttributes {
@@ -172,11 +173,25 @@ export interface FeedbackFormBlock {
   benefits: BenefitItem[];
 }
 
+export interface FaqItem {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+export interface FaqBlock {
+  __component: "blocks.faq";
+  id: number;
+  heading?: string;
+  items: FaqItem[];
+}
+
 export type DynamicBlock =
   | HeroBlock
   | AboutCardsBlock
   | TeamBlock
-  | FeedbackFormBlock;
+  | FeedbackFormBlock
+  | FaqBlock;
 
 // ---------------------------------------------------------------------------
 // Page collection type

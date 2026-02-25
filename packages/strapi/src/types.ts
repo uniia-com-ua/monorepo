@@ -21,11 +21,10 @@ export interface StrapiListResponse<T> {
   };
 }
 
-export interface StrapiEntity<T> {
+export type StrapiEntity<T> = {
   id: number;
   documentId: string;
-  attributes: T;
-}
+} & T;
 
 /** Strapi media format (thumbnail, small, medium, large, etc.) */
 export interface StrapiMediaFormat {
@@ -215,7 +214,5 @@ export interface BlogPostAttributes {
   cover?: StrapiMedia | null;
   author?: string;
   publishedAt: string;
-  category?: {
-    data: StrapiEntity<{ name: string; slug: string }> | null;
-  };
+  category?: StrapiEntity<{ name: string; slug: string }> | null;
 }

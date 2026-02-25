@@ -42,15 +42,14 @@ export default async function BlogPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts!.map((post) => {
-            const attrs = post.attributes;
-            const coverUrl = attrs.cover
-              ? getStrapiMediaUrl(attrs.cover.url)
+            const coverUrl = post.cover
+              ? getStrapiMediaUrl(post.cover.url)
               : null;
 
             return (
               <Link
                 key={post.id}
-                href={`/blog/${attrs.slug}`}
+                href={`/blog/${post.slug}`}
                 className="group"
               >
                 <article className="bg-card rounded-3xl shadow-card overflow-hidden transition-shadow hover:shadow-card-elevated">
@@ -58,7 +57,7 @@ export default async function BlogPage() {
                     <div className="relative aspect-video">
                       <Image
                         src={coverUrl}
-                        alt={attrs.cover?.alternativeText || attrs.title}
+                        alt={post.cover?.alternativeText || post.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -67,18 +66,18 @@ export default async function BlogPage() {
                   )}
                   <div className="p-6 space-y-3">
                     <h2 className="text-xl font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {attrs.title}
+                      {post.title}
                     </h2>
-                    {attrs.excerpt && (
+                    {post.excerpt && (
                       <p className="text-sm text-muted-foreground line-clamp-3">
-                        {attrs.excerpt}
+                        {post.excerpt}
                       </p>
                     )}
                     <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2">
-                      {attrs.author && <span>{attrs.author}</span>}
-                      {attrs.publishedAt && (
-                        <time dateTime={attrs.publishedAt}>
-                          {new Date(attrs.publishedAt).toLocaleDateString(
+                      {post.author && <span>{post.author}</span>}
+                      {post.publishedAt && (
+                        <time dateTime={post.publishedAt}>
+                          {new Date(post.publishedAt).toLocaleDateString(
                             "uk-UA",
                             {
                               year: "numeric",

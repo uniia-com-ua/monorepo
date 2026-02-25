@@ -36,5 +36,5 @@ export async function getGlobal(): Promise<GlobalAttributes> {
     }
   );
 
-  return res.data.attributes;
+  return res.data;
 }

@@ -21,34 +21,7 @@ export async function getPageBySlug(
           },
         },
         blocks: {
-          on: {
-            "blocks.hero": {
-              populate: {
-                backgroundImage: {
-                  fields: ["url", "alternativeText", "width", "height", "formats"],
-                },
-                ctaButtons: { populate: "*" },
-              },
-            },
-            "blocks.about-cards": {
-              populate: {
-                cards: { populate: "*" },
-              },
-            },
-            "blocks.team": {
-              populate: {
-                image: {
-                  fields: ["url", "alternativeText", "width", "height", "formats"],
-                },
-                stats: { populate: "*" },
-              },
-            },
-            "blocks.feedback-form": {
-              populate: {
-                benefits: { populate: "*" },
-              },
-            },
-          },
+          populate: "*",
         },
       },
     },
@@ -58,7 +31,7 @@ export async function getPageBySlug(
   );
 
   const entry = res.data[0];
-  return entry ? entry.attributes : null;
+  return entry ?? null;
 }
 
 /**
@@ -76,5 +49,5 @@ export async function getAllPageSlugs(): Promise<string[]> {
     }
   );
 
-  return res.data.map((entry) => entry.attributes.slug);
+  return res.data.map((entry) => entry.slug);
 }

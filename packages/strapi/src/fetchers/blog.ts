@@ -55,7 +55,7 @@ export async function getBlogPost(
   );
 
   const entry = res.data[0];
-  return entry ? entry.attributes : null;
+  return entry ?? null;
 }
 
 /**
@@ -74,5 +74,5 @@ export async function getAllBlogSlugs(): Promise<string[]> {
     }
   );
 
-  return res.data.map((entry) => entry.attributes.slug);
+  return res.data.map((entry) => entry.slug);
 }

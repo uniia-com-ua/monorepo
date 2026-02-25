@@ -60,19 +60,19 @@ export default async function RootLayout({
       >
         <Header
           logoUrl={
-            global.header.logo
+            global.header?.logo
               ? getStrapiMediaUrl(global.header.logo.url)
               : undefined
           }
-          navItems={global.header.navItems}
-          ctaButton={global.header.ctaButton}
+          navItems={global.header?.navItems ?? []}
+          ctaButton={global.header?.ctaButton ?? null}
         />
         {children}
         <Footer
-          columns={global.footer.columns}
-          socialLinks={global.footer.socialLinks}
-          copyright={global.footer.copyright}
-          bottomLinks={global.footer.bottomLinks}
+          columns={global.footer?.columns ?? []}
+          socialLinks={global.footer?.socialLinks ?? []}
+          copyright={global.footer?.copyright ?? ""}
+          bottomLinks={global.footer?.bottomLinks ?? []}
         />
       </body>
     </html>

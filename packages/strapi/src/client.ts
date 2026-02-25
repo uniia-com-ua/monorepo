@@ -15,9 +15,22 @@ function getStrapiURL(): string {
 }
 
 function getAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {};
+
   const token = process.env.STRAPI_API_TOKEN;
-  if (!token) return {};
-  return { Authorization: `Bearer ${token}` };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const cfId = process.env.CF_ACCESS_CLIENT_ID;
+  const cfSecret = process.env.CF_ACCESS_CLIENT_SECRET;
+  
+  if (cfId && cfSecret) {
+    headers["CF-Access-Client-Id"] = cfId;
+    headers["CF-Access-Client-Secret"] = cfSecret;
+  }
+
+  return headers;
 }
 
 // ---------------------------------------------------------------------------

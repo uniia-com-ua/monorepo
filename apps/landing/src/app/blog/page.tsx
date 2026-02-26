@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getBlogPosts, getStrapiMediaUrl } from "@workspace/strapi";
+import { getBlogPosts, getStrapiMediaProxyUrl } from "@workspace/strapi";
 
 export const metadata: Metadata = {
   title: "Блог",
@@ -43,7 +43,7 @@ export default async function BlogPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts!.map((post) => {
             const coverUrl = post.cover
-              ? getStrapiMediaUrl(post.cover.url)
+              ? getStrapiMediaProxyUrl(post.cover.url)
               : null;
 
             return (

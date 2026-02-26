@@ -91,3 +91,57 @@ export function getStrapiMediaUrl(url: string | undefined | null): string {
   if (url.startsWith("http")) return url;
   return `${getStrapiURL()}${url}`;
 }
+
+/**
+ * Fetch an image from Strapi and return it as a base64 data URL.
+ * Useful for generating blur placeholders from thumbnail images.
+ *
+ * @param url - Strapi media URL (relative or absolute)
+ * @returns Base64 data URL or undefined if fetch fails
+ */
+export async function getStrapiImageAsBase64(
+  url: string | undefined | null
+): Promise<string | undefined> {
+  if (!url) return undefined;
+
+  try {
+    const fullUrl = getStrapiMediaUrl(url);
+    const res = await fetch(fullUrl, {
+      headers: getAuthHeaders(),
+      next: { revalidate: 86400 },
+    });
+
+    if (!res.ok) return undefined;
+
+    const buffer = await res.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString("base64");
+    const contentType = res.headers.get("content-type") || "image/jpeg";
+
+    return `data:${contentType};base64,${base64}`;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Return a proxy path that routes through `/api/cms-media/…` so that
+ * Next.js Image Optimization (and the browser) can reach files behind
+ * Cloudflare Access without needing CF-Access-* headers on the client.
+ *
+ * Use this instead of {@link getStrapiMediaUrl} when the URL will be passed
+ * to `<Image src={…} />` or rendered as `<img>`.
+ */
+export function getStrapiMediaProxyUrl(
+  url: string | undefined | null,
+): string {
+  if (!url) return "";
+
+  let path = url;
+  if (path.startsWith("http")) {
+    const base = getStrapiURL();
+    path = path.replace(base, "");
+  }
+
+  if (!path.startsWith("/")) path = `/${path}`;
+  return `/api/cms-media${path}`;
+}

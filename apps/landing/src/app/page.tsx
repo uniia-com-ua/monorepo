@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getStrapiMediaUrl } from "@workspace/strapi";
+import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 import BlockRenderer from "../business/components/BlockRenderer";
 import { getPageSafe } from "../business/lib/get-page-safe";
 import { getGlobalSafe } from "../business/lib/get-global-safe";
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: seo.title,
       description: seo.description,
       images: seo.ogImage
-        ? [{ url: getStrapiMediaUrl(seo.ogImage.url) }]
+        ? [{ url: getStrapiMediaProxyUrl(seo.ogImage.url) }]
         : [],
     },
   };

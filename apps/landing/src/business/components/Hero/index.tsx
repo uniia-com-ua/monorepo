@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { Button } from "@workspace/ui/components/base/button";
 import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 import Image from "next/image";
@@ -34,6 +34,7 @@ export default function Hero({
   const scrollTo = useScrollTo();
   const imageRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleScroll = useCallback(() => {
     if (rafRef.current) return;
@@ -67,17 +68,21 @@ export default function Hero({
       {backgroundImage && (
         <div
           ref={imageRef}
-          className="absolute inset-0 will-change-transform"
+          className="absolute inset-0"
           style={{ top: "-20%", bottom: "-20%", height: "140%" }}
         >
           <Image
             src={backgroundImage}
             alt="Hero background"
             fill
-            className="object-cover"
+            sizes="100vw"
+            className={`object-cover object-center transition-[filter] duration-700 ease-out ${
+              isLoaded ? "blur-0" : "blur-sm"
+            }`}
             priority
             placeholder={backgroundBlurData ? "blur" : "empty"}
             blurDataURL={backgroundBlurData}
+            onLoad={() => setIsLoaded(true)}
           />
         </div>
       )}

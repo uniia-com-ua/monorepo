@@ -1,5 +1,5 @@
 import type { TeamBlock as TeamBlockData } from "@workspace/strapi";
-import { getStrapiMediaUrl } from "@workspace/strapi";
+import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 import { cardShimmer } from "@workspace/ui/lib/shimmer";
 import Team from "../../Team";
 
@@ -12,7 +12,7 @@ export default function TeamBlock({ data }: Props) {
     <Team
       heading={data.heading}
       subheading={data.subheading}
-      image={getStrapiMediaUrl(data.image?.url)}
+      image={getStrapiMediaProxyUrl(data.image?.url)}
       imageAlt={data.image?.alternativeText ?? "Команда"}
       imageBlurData={data.image ? cardShimmer : undefined}
       infoTitle={data.infoTitle}

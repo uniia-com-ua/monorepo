@@ -1,5 +1,10 @@
 // Client
-export { fetchAPI, getStrapiMediaUrl } from "./client";
+export {
+  fetchAPI,
+  getStrapiMediaUrl,
+  getStrapiMediaProxyUrl,
+  getStrapiImageAsBase64,
+} from "./client";
 export type { FetchAPIOptions } from "./client";
 
 // Types

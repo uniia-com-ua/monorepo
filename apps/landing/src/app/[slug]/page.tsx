@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getStrapiMediaUrl, getAllPageSlugs } from "@workspace/strapi";
+import { getStrapiMediaProxyUrl, getAllPageSlugs } from "@workspace/strapi";
 import BlockRenderer from "../../business/components/BlockRenderer";
 import { getPageSafe } from "../../business/lib/get-page-safe";
 import { getGlobalSafe } from "../../business/lib/get-global-safe";
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
       title: page.seo.title,
       description: page.seo.description,
       images: page.seo.ogImage
-        ? [{ url: getStrapiMediaUrl(page.seo.ogImage.url) }]
+        ? [{ url: getStrapiMediaProxyUrl(page.seo.ogImage.url) }]
         : [],
     },
   };

@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   getBlogPost,
   getAllBlogSlugs,
-  getStrapiMediaUrl,
+  getStrapiMediaProxyUrl,
 } from "@workspace/strapi";
 
 interface BlogPostPageParams {
@@ -41,7 +41,7 @@ export async function generateMetadata({
         title: post.title,
         description: post.excerpt,
         images: post.cover
-          ? [{ url: getStrapiMediaUrl(post.cover.url) }]
+          ? [{ url: getStrapiMediaProxyUrl(post.cover.url) }]
           : [],
       },
     };
@@ -69,7 +69,7 @@ export default async function BlogPostPage({ params }: BlogPostPageParams) {
     notFound();
   }
 
-  const coverUrl = post.cover ? getStrapiMediaUrl(post.cover.url) : null;
+  const coverUrl = post.cover ? getStrapiMediaProxyUrl(post.cover.url) : null;
 
   return (
     <div className="container max-w-container px-4 mx-auto py-12">

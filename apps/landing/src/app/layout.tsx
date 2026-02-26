@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Header from "../business/components/Header";
 import Footer from "../business/components/Footer";
 import { getGlobalSafe } from "../business/lib/get-global-safe";
-import { getStrapiMediaUrl } from "@workspace/strapi";
+import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 
 const ukraineSans = localFont({
   variable: "--font-sans",
@@ -30,6 +30,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const seo = global.defaultSeo;
 
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL || "https://uniia.com.ua",
+    ),
     title: {
       default: seo.title,
       template: `%s | ${seo.title}`,
@@ -40,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: seo.title,
       description: seo.description,
       images: seo.ogImage
-        ? [{ url: getStrapiMediaUrl(seo.ogImage.url) }]
+        ? [{ url: getStrapiMediaProxyUrl(seo.ogImage.url) }]
         : [],
     },
   };
@@ -61,7 +64,7 @@ export default async function RootLayout({
         <Header
           logoUrl={
             global.header?.logo
-              ? getStrapiMediaUrl(global.header.logo.url)
+              ? getStrapiMediaProxyUrl(global.header.logo.url)
               : undefined
           }
           navItems={global.header?.navItems ?? []}

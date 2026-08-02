@@ -12,9 +12,11 @@ export interface FooterColumnData {
 }
 
 export interface FooterSocialLink {
-  platform: string;
   url: string;
-  icon?: string;
+  icon?: {
+    url: string;
+    alternativeText?: string | null;
+  } | null;
 }
 
 export interface FooterProps {
@@ -55,21 +57,23 @@ export default function Footer({
 
             {socialLinks.length > 0 && (
               <div className="flex items-center gap-2">
-                {socialLinks.map((social) => (
+                {socialLinks.map((social, index) => (
                   <a
-                    key={social.platform}
+                    key={social.url || index}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center w-10 h-10 bg-muted rounded-sm hover:bg-muted/80 transition-colors"
-                    aria-label={social.platform}
+                    aria-label={social.icon?.alternativeText || "Social link"}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/icons/${social.platform.toLowerCase()}_inverted.svg`}
-                      alt={social.platform}
-                      className="h-5 w-auto max-w-7"
-                    />
+                    {social.icon?.url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={`/api/cms-media${social.icon.url}`}
+                        alt={social.icon.alternativeText || ""}
+                        className="h-5 w-auto max-w-7"
+                      />
+                    )}
                   </a>
                 ))}
               </div>

@@ -31,9 +31,9 @@ export const FALLBACK_GLOBAL: GlobalAttributes = {
       },
     ],
     socialLinks: [
-      { platform: "Instagram", url: "https://instagram.com/uniia" },
-      { platform: "Facebook", url: "https://facebook.com/uniia" },
-      { platform: "LinkedIn", url: "https://linkedin.com/company/uniia" },
+      { url: "https://instagram.com/uniia" },
+      { url: "https://facebook.com/uniia" },
+      { url: "https://linkedin.com/company/uniia" },
     ],
     copyright: `uniia.com.ua © ${new Date().getFullYear()}`,
     bottomLinks: [

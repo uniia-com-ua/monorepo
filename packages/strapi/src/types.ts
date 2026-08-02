@@ -90,9 +90,8 @@ export interface FooterColumn {
 }
 
 export interface SocialLink {
-  platform: string;
   url: string;
-  icon?: string;
+  icon?: StrapiMedia | null;
 }
 
 export interface GlobalFooter {

@@ -21,7 +21,11 @@ export async function getGlobal(): Promise<GlobalAttributes> {
         footer: {
           populate: {
             columns: { populate: { links: { populate: "*" } } },
-            socialLinks: { populate: "*" },
+            socialLinks: {
+              populate: {
+                icon: { fields: ["url", "alternativeText"] },
+              },
+            },
           },
         },
         defaultSeo: {

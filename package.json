@@ -4,9 +4,14 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "build:landing": "turbo build --filter=landing",
+    "start": "turbo start",
+    "start:landing": "turbo start --filter=landing",
     "dev": "turbo dev",
+    "dev:landing": "turbo dev --filter=landing",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ui:add": "pnpm dlx shadcn@latest add -c packages/ui"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",

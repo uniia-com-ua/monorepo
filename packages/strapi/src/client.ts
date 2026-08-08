@@ -8,7 +8,7 @@ function getStrapiURL(): string {
   const url = process.env.STRAPI_URL;
   if (!url) {
     throw new Error(
-      "Missing STRAPI_URL environment variable. Set it in .env.local"
+      "Missing STRAPI_URL environment variable. Set it in .env.local",
     );
   }
   return url.replace(/\/$/, ""); // strip trailing slash
@@ -24,7 +24,7 @@ function getAuthHeaders(): Record<string, string> {
 
   const cfId = process.env.CF_ACCESS_CLIENT_ID;
   const cfSecret = process.env.CF_ACCESS_CLIENT_SECRET;
-  
+
   if (cfId && cfSecret) {
     headers["CF-Access-Client-Id"] = cfId;
     headers["CF-Access-Client-Secret"] = cfSecret;
@@ -55,7 +55,7 @@ export interface FetchAPIOptions {
 export async function fetchAPI<T = unknown>(
   path: string,
   params: Record<string, unknown> = {},
-  opts: FetchAPIOptions = {}
+  opts: FetchAPIOptions = {},
 ): Promise<T> {
   const baseUrl = getStrapiURL();
   const queryString = qs.stringify(params, { encodeValuesOnly: true });
@@ -71,7 +71,7 @@ export async function fetchAPI<T = unknown>(
 
   if (!res.ok) {
     throw new Error(
-      `Strapi API error: ${res.status} ${res.statusText} — ${url}`
+      `Strapi API error: ${res.status} ${res.statusText} — ${url}`,
     );
   }
 
@@ -100,7 +100,7 @@ export function getStrapiMediaUrl(url: string | undefined | null): string {
  * @returns Base64 data URL or undefined if fetch fails
  */
 export async function getStrapiImageAsBase64(
-  url: string | undefined | null
+  url: string | undefined | null,
 ): Promise<string | undefined> {
   if (!url) return undefined;
 
@@ -131,9 +131,7 @@ export async function getStrapiImageAsBase64(
  * Use this instead of {@link getStrapiMediaUrl} when the URL will be passed
  * to `<Image src={…} />` or rendered as `<img>`.
  */
-export function getStrapiMediaProxyUrl(
-  url: string | undefined | null,
-): string {
+export function getStrapiMediaProxyUrl(url: string | undefined | null): string {
   if (!url) return "";
 
   let path = url;

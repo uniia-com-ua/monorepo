@@ -3,6 +3,11 @@ const nextConfig = {
   output: "standalone",
   transpilePackages: ["@workspace/ui", "@workspace/strapi"],
   images: {
+    localPatterns: [
+      {
+        pathname: "/api/cms-media/**",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",
@@ -18,6 +23,6 @@ const nextConfig = {
       },
     ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

@@ -1,9 +1,9 @@
+import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 import BlockRenderer from "../business/components/BlockRenderer";
-import { getPageSafe } from "../business/lib/get-page-safe";
 import { getGlobalSafe } from "../business/lib/get-global-safe";
+import { getPageSafe } from "../business/lib/get-page-safe";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSafe("/");
@@ -33,7 +33,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="container max-w-container px-4 mx-auto flex flex-col items-center justify-center">
+    <div className="max-w-container container mx-auto flex flex-col items-center justify-center px-4">
       <BlockRenderer blocks={page.blocks} />
     </div>
   );

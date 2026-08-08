@@ -7,7 +7,7 @@ import { FALLBACK_HOME_PAGE } from "./fallback-data";
  * Falls back to hardcoded data for the homepage if Strapi is unreachable.
  */
 export async function getPageSafe(
-  slug: string
+  slug: string,
 ): Promise<PageAttributes | null> {
   if (!process.env.STRAPI_URL) {
     return slug === "/" ? FALLBACK_HOME_PAGE : null;

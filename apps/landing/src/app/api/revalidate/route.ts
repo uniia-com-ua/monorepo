@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
 
   // Revalidate each tag
   for (const tag of tags) {
+    // @ts-expect-error Good to know @ https://nextjs.org/docs/app/api-reference/functions/revalidateTag#parameters
     revalidateTag(tag); // @FIXME: Deprecated API
   }
 

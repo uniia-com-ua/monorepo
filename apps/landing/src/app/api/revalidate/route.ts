@@ -23,26 +23,26 @@ export async function POST(request: NextRequest) {
   if (!expectedSecret) {
     return NextResponse.json(
       { error: "REVALIDATION_SECRET not configured on server" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
   if (secret !== expectedSecret) {
     return NextResponse.json(
       { error: "Invalid revalidation secret" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
   // Parse body
   let body: { tag?: string; tags?: string[] };
+  // #TODO:
+  // Потрібно подивитися що страпі відправляє в тілі вебхука, бо зараз воно не відповідає очікуваному формату. Можливо, потрібно буде змінити обробку тіла запиту.
+  // (Вебхуд падає в помилку 400 No tags provided)
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { error: "Invalid JSON body" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   // Support both single tag and array of tags
@@ -52,14 +52,14 @@ export async function POST(request: NextRequest) {
 
   if (tags.length === 0) {
     return NextResponse.json(
-      { error: "No tags provided. Send { tag: \"...\" } or { tags: [\"...\"] }" },
-      { status: 400 }
+      { error: 'No tags provided. Send { tag: "..." } or { tags: ["..."] }' },
+      { status: 400 },
     );
   }
 
   // Revalidate each tag
   for (const tag of tags) {
-    revalidateTag(tag);
+    revalidateTag(tag); // @FIXME: Deprecated API
   }
 
   return NextResponse.json({

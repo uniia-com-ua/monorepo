@@ -2,11 +2,7 @@
  * Fallback data used when Strapi is unavailable or not yet configured.
  * This ensures the app can still render during development.
  */
-
-import type {
-  GlobalAttributes,
-  PageAttributes,
-} from "@workspace/strapi";
+import type { GlobalAttributes, PageAttributes } from "@workspace/strapi";
 
 export const FALLBACK_GLOBAL: GlobalAttributes = {
   header: {
@@ -65,14 +61,14 @@ export const FALLBACK_HOME_PAGE: PageAttributes = {
       title: "Карбуй освіту",
       subtitle:
         "Перша онлайн-платформа для студентів українських університетів",
-      backgroundImage: {
-        id: 1,
-        url: "https://cms.uniia.com.ua/uploads/large_main_image_62cce1a3bf.webp",
-        alternativeText: "Hero background",
-        width: 1920,
-        height: 1080,
-        formats: null,
-      },
+      // backgroundImage: {
+      //   id: 1,
+      //   url: "https://cms.uniia.com.ua/uploads/large_main_image_62cce1a3bf.webp",
+      //   alternativeText: "Hero background",
+      //   width: 1920,
+      //   height: 1080,
+      //   formats: null,
+      // },
       ctaButtons: [
         { text: "Розпочати", scrollTo: "about" },
         { text: "Дізнатись більше", scrollTo: "about", variant: "glass" },

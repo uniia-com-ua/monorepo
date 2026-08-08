@@ -1,0 +1,37 @@
+name: CI
+
+# Runs on every PR into main: builds the "landing" Docker image with the exact
+# same Dockerfile/build-args as the staging build in release.yml (see that
+# file), just without pushing anywhere. Catches build breakage (missing envs,
+# type errors, turbo/pnpm issues, etc.) before merge, instead of at tag time.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-landing:
+    name: Build landing (staging config, no push)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build landing image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/landing/Dockerfile
+          push: false
+          build-args: |
+            STRAPI_URL=https://cms-test.uniia.com.ua
+            STRAPI_API_TOKEN=${{ secrets.STRAPI_API_TOKEN_STAGING }}
+            NEXT_PUBLIC_SITE_URL=https://test.uniia.com.ua
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64

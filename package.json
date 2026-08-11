@@ -14,7 +14,9 @@
     "dev:strapi": "turbo run dev --filter=strapi",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "ui:add": "pnpm dlx shadcn@latest add -c packages/ui"
+    "ui:add": "pnpm dlx shadcn@latest add -c packages/ui",
+    "db:start": "pnpm --filter strapi db:start",
+    "db:stop": "pnpm --filter strapi db:stop"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",

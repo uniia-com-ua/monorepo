@@ -1,0 +1,24 @@
+name: strapi-postgres
+services:
+  db:
+    platform: linux/amd64
+    restart: unless-stopped
+    env_file: .env
+    image: postgres:16.0-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+
+volumes:
+  data:
+
+networks:
+  db_network:
+    driver: bridge

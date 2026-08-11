@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "build:landing": "turbo build --filter=landing",
+    "build:landing": "turbo run build --filter=landing",
+    "build:strapi": "turbo run build --filter=strapi",
     "start": "turbo start",
-    "start:landing": "turbo start --filter=landing",
+    "start:landing": "turbo run start --filter=landing",
+    "start:strapi": "turbo run start --filter=strapi",
     "dev": "turbo dev",
-    "dev:landing": "turbo dev --filter=landing",
+    "dev:landing": "turbo run dev --filter=landing",
+    "dev:strapi": "turbo run dev --filter=strapi",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ui:add": "pnpm dlx shadcn@latest add -c packages/ui"
@@ -28,7 +31,10 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@swc/core",
+      "better-sqlite3",
       "core-js-pure",
+      "esbuild",
       "sharp"
     ]
   }

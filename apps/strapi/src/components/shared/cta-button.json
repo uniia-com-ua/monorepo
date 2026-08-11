@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_shared_cta_buttons",
+  "info": {
+    "displayName": "cta-button",
+    "icon": "chartBubble"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string"
+    },
+    "scrollTo": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": [
+        "default",
+        "glass",
+        "white",
+        "secondary"
+      ]
+    }
+  },
+  "config": {}
+}

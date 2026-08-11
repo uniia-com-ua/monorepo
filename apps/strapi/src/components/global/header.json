@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_global_headers",
+  "info": {
+    "displayName": "header",
+    "icon": "pin"
+  },
+  "options": {},
+  "attributes": {
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "navItems": {
+      "type": "component",
+      "component": "shared.nav-item",
+      "repeatable": true
+    },
+    "ctaButton": {
+      "type": "component",
+      "component": "shared.cta-button",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

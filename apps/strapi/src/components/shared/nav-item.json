@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_shared_nav_items",
+  "info": {
+    "displayName": "nav-item",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string"
+    },
+    "scrollTo": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

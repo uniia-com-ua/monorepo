@@ -17,6 +17,7 @@
     "db:stop": "docker compose down"
   },
   "dependencies": {
+    "@notum-cz/strapi-plugin-smart-populate": "^1.0.1",
     "@strapi/database": "5.51.2",
     "@strapi/plugin-cloud": "5.51.2",
     "@strapi/plugin-users-permissions": "5.51.2",

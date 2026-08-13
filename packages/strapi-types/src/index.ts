@@ -46,3 +46,36 @@ export type Result<
     >;
   }
 >;
+
+// Used for defining type safe fallback values for Strapi content types, e.g. for global config or page builder blocks.
+// Omits strapi internal fields like `id`, `createdAt`, `updatedAt`, etc. **recursively** and only keeps the actual content type attributes.
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
+
+type FallbackInternalKey =
+  | "id"
+  | "documentId"
+  | "createdAt"
+  | "updatedAt"
+  | "publishedAt"
+  | "createdBy"
+  | "updatedBy"
+  | "locale"
+  | "localizations";
+
+type DeepFallbackResult<T> = T extends Primitive
+  ? T
+  : T extends Date
+    ? T
+    : T extends readonly (infer TItem)[]
+      ? DeepFallbackResult<TItem>[]
+      : T extends object
+        ? {
+            [TKey in keyof T as TKey extends FallbackInternalKey
+              ? never
+              : TKey]?: DeepFallbackResult<T[TKey]>;
+          }
+        : T;
+
+export type FallbackResult<TUID extends UID.ContentType> = DeepFallbackResult<
+  Result<TUID>
+>;

@@ -7,7 +7,7 @@ export const STRAPI_CLIENT_CONFIG = createStrapiConfig(
       allowedMethods: ["GET"],
     },
     "api::global.global": {
-      path: "/globals",
+      path: "/global",
       allowedMethods: ["GET"],
     },
   },

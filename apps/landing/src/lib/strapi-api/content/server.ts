@@ -1,8 +1,11 @@
+import { FALLBACK_GLOBAL } from "@/lib/fallbacks";
 import { PublicStrapiClient } from "@/lib/strapi-api";
 import type { CustomFetchOptions } from "@/types/general";
-import { UID } from "@workspace/strapi-types";
+import { strapiCacheTag } from "@workspace/shared-data";
+import { FallbackResult, UID } from "@workspace/strapi-types";
 import type { Locale } from "next-intl";
 import "server-only";
+import { StrapiClientParams } from "../client/base";
 
 export async function fetchPage(
   fullPath: string,
@@ -78,5 +81,38 @@ export async function fetchPageSeo(
       `[fetchPageSeo] Failed to fetch page SEO for "${fullPath}":`,
       error,
     );
+  }
+}
+
+export async function fetchGlobalConfig(
+  locale?: Locale,
+  populate: StrapiClientParams<"api::global.global">["populate"] = {
+    header: "smart",
+    footer: "smart",
+  },
+  defaults: FallbackResult<"api::global.global"> = FALLBACK_GLOBAL,
+) {
+  try {
+    return await PublicStrapiClient.fetchOne(
+      "api::global.global",
+      undefined,
+      {
+        locale,
+        populate,
+      },
+      {
+        next: {
+          revalidate: 600,
+          tags: [strapiCacheTag("api::global.global")],
+        },
+      },
+    );
+  } catch (error: unknown) {
+    console.error(`[fetchGlobalConfig] Failed to fetch global config:`, error);
+
+    return {
+      data: defaults,
+      meta: {},
+    };
   }
 }

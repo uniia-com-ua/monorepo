@@ -1,5 +1,13 @@
+import Header from "@/business/components/Header";
+import ErrorBoundry from "@/components/elementary/ErrorBoundry";
+import { StrapiFooter } from "@/components/page-builder/single-types/StrapiFooter";
+import { StrapiNavbar } from "@/components/page-builder/single-types/StrapiNavbar";
 import ServerProviders from "@/components/providers/ServerProviders";
 import { isValidLocale, routing } from "@/lib/i18n/routing";
+import { PublicStrapiClient } from "@/lib/strapi-api";
+import { fetchGlobalConfig } from "@/lib/strapi-api/content/server";
+import { formatStrapiMediaUrl } from "@/lib/strapi-api/media";
+import { strapiCacheTag } from "@workspace/shared-data";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Geist_Mono } from "next/font/google";
@@ -60,7 +68,6 @@ export default async function RootLayout({
   params,
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
-
   if (!isValidLocale(locale)) {
     notFound();
   }
@@ -93,7 +100,15 @@ export default async function RootLayout({
           fontMono.variable,
         )}
       >
-        <ServerProviders>{children}</ServerProviders>
+        <ServerProviders>
+          <ErrorBoundry showErrorMessage>
+            <StrapiNavbar locale={locale} />
+          </ErrorBoundry>
+          {children}
+          <ErrorBoundry showErrorMessage>
+            <StrapiFooter locale={locale} />
+          </ErrorBoundry>
+        </ServerProviders>
       </body>
     </html>
   );

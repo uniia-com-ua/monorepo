@@ -18,6 +18,9 @@ import type {
 // Mapping of Strapi content type UIDs to API endpoint paths.
 import { STRAPI_ENDPOINTS as API_ENDPOINTS } from "../client-config";
 
+export type StrapiClientParams<TContentTypeUID extends UID.ContentType> =
+  AppLocalizedParams<FindFirst<TContentTypeUID> | FindMany<TContentTypeUID>>;
+
 export default abstract class BaseStrapiClient {
   private async parseResponse(response: Response) {
     const contentType = response.headers.get("content-type");

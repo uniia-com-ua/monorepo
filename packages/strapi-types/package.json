@@ -15,7 +15,7 @@
   },
   "types": "src/index.ts",
   "scripts": {
-    "build": "node scripts/sync-types.mjs strapi",
+    "build": "echo 'This package is only for types, no build step is required.'",
     "dev": "node scripts/link-types.mjs strapi"
   },
   "devDependencies": {

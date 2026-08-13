@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import LocaleSwitcher from "@/components/elementary/LocaleSwitcher";
 import { Button } from "@workspace/ui/components/base/button";
-import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 import {
   Drawer,
-  DrawerTrigger,
-  DrawerContent,
   DrawerClose,
+  DrawerContent,
   DrawerTitle,
+  DrawerTrigger,
 } from "@workspace/ui/components/drawer";
+import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
+import { Menu, X } from "lucide-react";
+import { useLocale } from "next-intl";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useState } from "react";
 
 export interface HeaderNavItem {
   label: string;
@@ -39,6 +41,7 @@ export default function Header({
 }: HeaderProps) {
   const scrollTo = useScrollTo();
   const [isOpen, setIsOpen] = useState(false);
+  const locale = useLocale();
 
   const handleNavClick = useCallback(
     (item: HeaderNavItem) => {
@@ -47,7 +50,7 @@ export default function Header({
         setIsOpen(false);
       }
     },
-    [scrollTo]
+    [scrollTo],
   );
 
   const handleCtaClick = useCallback(() => {
@@ -58,13 +61,13 @@ export default function Header({
   }, [ctaButton, scrollTo]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-background/70 backdrop-blur-sm h-(--header-height)">
-      <div className="mx-auto max-w-container px-4 flex h-full gap-5 items-center justify-between">
+    <header className="bg-background/70 h-(--header-height) fixed inset-x-0 top-0 z-50 backdrop-blur-sm">
+      <div className="max-w-container mx-auto flex h-full items-center justify-between gap-5 px-4">
         <div className="flex items-center gap-9">
           <Link
             href="/"
-            className={`flex items-center select-none transition-opacity duration-300 ${
-              isOpen ? "md:opacity-100 opacity-0" : "opacity-100"
+            className={`flex select-none items-center transition-opacity duration-300 ${
+              isOpen ? "opacity-0 md:opacity-100" : "opacity-100"
             }`}
             aria-label="Унія"
           >
@@ -79,7 +82,7 @@ export default function Header({
 
           {/* Desktop Navigation */}
           {navItems.length > 0 && (
-            <nav className="hidden md:flex items-center gap-2 min-[820px]:gap-5">
+            <nav className="hidden items-center gap-2 md:flex min-[820px]:gap-5">
               {navItems.map((item, i) => (
                 <Button
                   key={i}
@@ -102,10 +105,8 @@ export default function Header({
         </div>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-5">
-          <Button variant="ghost" type="button">
-            ENG
-          </Button>
+        <div className="hidden items-center gap-5 md:flex">
+          <LocaleSwitcher locale={locale} />
           {ctaButton && (
             <Button
               variant="secondary"
@@ -141,11 +142,11 @@ export default function Header({
 
           <DrawerContent className="h-full w-[85vw] max-w-sm">
             {/* Mobile Menu Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border">
+            <div className="border-border flex items-center justify-between border-b p-4">
               <DrawerTitle className="sr-only">Навігаційне меню</DrawerTitle>
               <Link
                 href="/"
-                className="flex items-center select-none"
+                className="flex select-none items-center"
                 aria-label="Унія"
                 onClick={() => setIsOpen(false)}
               >
@@ -158,11 +159,7 @@ export default function Header({
                 />
               </Link>
               <DrawerClose asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Закрити меню"
-                >
+                <Button variant="ghost" size="icon" aria-label="Закрити меню">
                   <X className="size-6" />
                 </Button>
               </DrawerClose>
@@ -177,7 +174,7 @@ export default function Header({
                       <Link
                         href={item.href}
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center w-full px-4 py-3 text-lg font-medium text-foreground/80 hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                        className="text-foreground/80 hover:text-foreground hover:bg-muted flex w-full items-center rounded-lg px-4 py-3 text-lg font-medium transition-colors"
                       >
                         {item.label}
                       </Link>
@@ -185,7 +182,7 @@ export default function Header({
                       <button
                         type="button"
                         onClick={() => handleNavClick(item)}
-                        className="flex items-center w-full px-4 py-3 text-lg font-medium text-foreground/80 hover:text-foreground hover:bg-muted rounded-lg transition-colors text-left"
+                        className="text-foreground/80 hover:text-foreground hover:bg-muted flex w-full items-center rounded-lg px-4 py-3 text-left text-lg font-medium transition-colors"
                       >
                         {item.label}
                       </button>
@@ -196,7 +193,7 @@ export default function Header({
             </nav>
 
             {/* Mobile Menu Footer */}
-            <div className="p-4 border-t border-border space-y-3">
+            <div className="border-border space-y-3 border-t p-4">
               {ctaButton && (
                 <Button
                   variant="secondary"

@@ -3,9 +3,9 @@ import "@workspace/ui/globals.css";
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
-import Footer from "../business/components/Footer";
-import Header from "../business/components/Header";
-import { getGlobalSafe } from "../business/lib/get-global-safe";
+import Footer from "../business/components/Footer/index.js";
+import Header from "../business/components/Header/index.js";
+import { getGlobalSafe } from "../business/lib/get-global-safe.js";
 
 const ukraineSans = localFont({
   variable: "--font-sans",

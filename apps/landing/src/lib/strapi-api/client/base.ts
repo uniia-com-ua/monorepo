@@ -206,7 +206,7 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions,
-  ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
+  ): Promise<APIResponse<Result<TContentTypeUID, TParams>, object>> {
     const slugFilter =
       slug && slug.length > 0 ? { $eq: slug } : { $null: true };
     const mergedParams = {
@@ -241,13 +241,13 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions,
-  ): Promise<Result<TContentTypeUID, TParams> & PageLocalization> {
+  ): Promise<APIResponse<Result<TContentTypeUID, TParams> & PageLocalization>> {
     const slugFilter =
       fullPath && fullPath.length > 0 ? { $eq: fullPath } : { $null: true };
     const mergedParams = {
       ...params,
       sort: { publishedAt: "desc" },
-      filters: { ...params?.filters, fullPath: slugFilter },
+      filters: { ...params?.filters, slug: slugFilter },
       pagination: {
         page: 1,
         pageSize: 1,
@@ -259,8 +259,8 @@ export default abstract class BaseStrapiClient {
       await this.fetchAPI(path, mergedParams, requestInit, options);
 
     // return last published entry
-    // @ts-expect-error localizations field is not in the response type
     return {
+      // @ts-expect-error localizations field is not in the response type
       data: response.data.pop() ?? null,
       meta: response.meta,
     };

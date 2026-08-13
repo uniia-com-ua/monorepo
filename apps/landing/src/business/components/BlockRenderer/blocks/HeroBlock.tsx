@@ -1,7 +1,7 @@
 import type { HeroBlock as HeroBlockData } from "@workspace/strapi";
 import {
-  getStrapiMediaProxyUrl,
   getStrapiImageAsBase64,
+  getStrapiMediaProxyUrl,
 } from "@workspace/strapi";
 import { heroShimmer } from "@workspace/ui/lib/shimmer";
 import Hero from "../../Hero";
@@ -21,13 +21,17 @@ export default async function HeroBlock({ data }: Props) {
       title={data.title}
       subtitle={data.subtitle}
       backgroundImage={getStrapiMediaProxyUrl(data.backgroundImage?.url)}
-      backgroundBlurData={blurDataUrl ?? (data.backgroundImage ? heroShimmer : undefined)}
-      ctaButtons={data.ctaButtons?.map((btn) => ({
-        text: btn.text,
-        href: btn.href,
-        scrollTo: btn.scrollTo,
-        variant: btn.variant,
-      })) ?? []}
+      backgroundBlurData={
+        blurDataUrl ?? (data.backgroundImage ? heroShimmer : undefined)
+      }
+      ctaButtons={
+        data.ctaButtons?.map((btn) => ({
+          text: btn.text,
+          href: btn.href,
+          scrollTo: btn.scrollTo,
+          variant: btn.variant,
+        })) ?? []
+      }
     />
   );
 }

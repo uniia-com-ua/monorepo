@@ -16,9 +16,9 @@ export interface APIResponseCollectionMetadata {
   };
 }
 
-export interface APIResponse<T> {
+export interface APIResponse<T, U = APIResponseCollectionMetadata> {
   data: T | null;
-  meta: object;
+  meta: U;
 }
 
 export interface APIResponseCollection<T> {

@@ -16,6 +16,7 @@ export const env = createEnv({
 
   runtimeEnv: {
     // Server-side environment variables
+    STRAPI_URL: process.env.STRAPI_URL,
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
 

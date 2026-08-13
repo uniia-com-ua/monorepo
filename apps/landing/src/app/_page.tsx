@@ -1,9 +1,9 @@
 import { getStrapiMediaProxyUrl } from "@workspace/strapi";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import BlockRenderer from "../business/components/BlockRenderer";
-import { getGlobalSafe } from "../business/lib/get-global-safe";
-import { getPageSafe } from "../business/lib/get-page-safe";
+import BlockRenderer from "../business/components/BlockRenderer/index.js";
+import { getGlobalSafe } from "../business/lib/get-global-safe.js";
+import { getPageSafe } from "../business/lib/get-page-safe.js";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageSafe("/");

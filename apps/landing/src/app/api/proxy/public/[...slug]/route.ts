@@ -49,6 +49,8 @@ async function handler(
 
   const authHeader = await createStrapiAuthHeader({ isReadOnly });
 
+  console.log(`[Strapi Proxy] ${req.method} ${url} (readOnly: ${isReadOnly})`);
+
   const response = await fetch(url, {
     headers: {
       ...Object.fromEntries(clonnedReq.headers.entries()),

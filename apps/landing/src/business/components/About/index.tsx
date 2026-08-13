@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@workspace/ui/components/base/button";
-import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 import { useInView } from "@workspace/ui/hooks/use-in-view";
+import { useScrollTo } from "@workspace/ui/hooks/use-scroll-to";
 import { cn } from "@workspace/ui/lib/utils";
 
 export interface AboutCard {
   id: string;
   title: string;
   description: string;
-  variant: "light" | "dark";
+  variant: "default" | "light" | "dark";
   cta?: string;
   scrollTarget?: string;
 }
@@ -31,19 +31,19 @@ export default function About({
   });
 
   return (
-    <section ref={sectionRef} id="about" className="w-full mt-section-gap">
-      <div className="w-full rounded-section bg-section-bg p-6 md:p-10 lg:p-14 shadow-section">
+    <section ref={sectionRef} id="about" className="mt-section-gap w-full">
+      <div className="rounded-section bg-section-bg shadow-section w-full p-6 md:p-10 lg:p-14">
         <div
           className={cn(
-            "text-center max-w-3xl mx-auto mb-12 animate-on-scroll",
-            isInView && "is-visible"
+            "animate-on-scroll mx-auto mb-12 max-w-3xl text-center",
+            isInView && "is-visible",
           )}
         >
-          <h2 className="text-3xl md:text-4xl text-foreground font-semibold">
+          <h2 className="text-foreground text-3xl font-semibold md:text-4xl">
             {heading}
           </h2>
           {subheading && (
-            <p className="text-base md:text-lg text-muted-foreground mt-4">
+            <p className="text-muted-foreground mt-4 text-base md:text-lg">
               {subheading}
             </p>
           )}
@@ -57,12 +57,12 @@ export default function About({
               <article
                 key={card.id}
                 className={cn(
-                  "rounded-4xl p-6 md:p-8 flex flex-col gap-6 relative overflow-hidden animate-on-scroll animate-card-pop",
+                  "rounded-4xl animate-on-scroll animate-card-pop relative flex flex-col gap-6 overflow-hidden p-6 md:p-8",
                   isDark
-                    ? "bg-section-bg-dark text-white shadow-card-elevated"
+                    ? "bg-section-bg-dark shadow-card-elevated text-white"
                     : "bg-card text-card-foreground shadow-card",
                   isInView && "is-visible",
-                  `stagger-${index + 2}`
+                  `stagger-${index + 2}`,
                 )}
               >
                 {isDark && (
@@ -70,16 +70,16 @@ export default function About({
                     className="pointer-events-none absolute inset-0"
                     aria-hidden="true"
                   >
-                    <div className="absolute -top-16 -right-16 w-[280px] h-[280px] rounded-full bg-gradient-to-br from-primary/50 via-primary/20 to-transparent blur-3xl animate-blob-1" />
-                    <div className="absolute -bottom-14 -left-14 w-[240px] h-[240px] rounded-full bg-gradient-to-tr from-highlight/40 via-highlight/10 to-transparent blur-3xl animate-blob-2" />
-                    <div className="absolute top-1/2 left-1/2 w-[320px] h-[180px] rounded-full bg-gradient-to-r from-primary/20 via-transparent to-highlight/20 blur-2xl animate-blob-3" />
+                    <div className="from-primary/50 via-primary/20 animate-blob-1 absolute -right-16 -top-16 h-[280px] w-[280px] rounded-full bg-gradient-to-br to-transparent blur-3xl" />
+                    <div className="from-highlight/40 via-highlight/10 animate-blob-2 absolute -bottom-14 -left-14 h-[240px] w-[240px] rounded-full bg-gradient-to-tr to-transparent blur-3xl" />
+                    <div className="from-primary/20 to-highlight/20 animate-blob-3 absolute left-1/2 top-1/2 h-[180px] w-[320px] rounded-full bg-gradient-to-r via-transparent blur-2xl" />
                   </div>
                 )}
 
                 <div
                   className={isDark ? "relative z-10 space-y-4" : "space-y-4"}
                 >
-                  <h3 className="text-2xl leading-tight font-medium">
+                  <h3 className="text-2xl font-medium leading-tight">
                     {card.title}
                   </h3>
                   <p

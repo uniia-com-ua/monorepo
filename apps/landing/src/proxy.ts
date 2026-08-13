@@ -29,6 +29,6 @@ export const config = {
   matcher: [
     "/",
     "/sitemap.xml",
-    "/((?!_next|_vercel|api|images|robots.txt|favicon.ico|sitemap).*)",
+    "/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\\..*).*)",
   ],
 };

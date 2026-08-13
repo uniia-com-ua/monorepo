@@ -1,13 +1,8 @@
-import Header from "@/business/components/Header";
 import ErrorBoundry from "@/components/elementary/ErrorBoundry";
 import { StrapiFooter } from "@/components/page-builder/single-types/StrapiFooter";
 import { StrapiNavbar } from "@/components/page-builder/single-types/StrapiNavbar";
 import ServerProviders from "@/components/providers/ServerProviders";
 import { isValidLocale, routing } from "@/lib/i18n/routing";
-import { PublicStrapiClient } from "@/lib/strapi-api";
-import { fetchGlobalConfig } from "@/lib/strapi-api/content/server";
-import { formatStrapiMediaUrl } from "@/lib/strapi-api/media";
-import { strapiCacheTag } from "@workspace/shared-data";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
 import { Geist_Mono } from "next/font/google";
@@ -75,24 +70,7 @@ export default async function RootLayout({
   const CSR_ENVs = ["NODE_ENV"];
 
   return (
-    <html lang={locale}>
-      <head>
-        <Script id="csr-config" strategy="beforeInteractive">
-          {`
-         window.CSR_CONFIG = window.CSR_CONFIG || {};
-         window.CSR_CONFIG = ${JSON.stringify({
-           ...CSR_ENVs.reduce(
-             (acc, curr) => {
-               acc[curr] = process.env?.[curr];
-
-               return acc;
-             },
-             {} as Record<string, string | undefined>,
-           ),
-         })};
-       `}
-        </Script>
-      </head>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={cn(
           "pt-(--header-height) font-sans antialiased",

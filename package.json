@@ -10,7 +10,7 @@
     "start:landing": "turbo run start --filter=landing",
     "start:strapi": "turbo run start --filter=strapi",
     "dev": "turbo dev",
-    "dev:landing": "turbo run dev --filter=landing",
+    "dev:landing": "turbo run dev --filter=landing...",
     "dev:strapi": "turbo run dev --filter=strapi",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

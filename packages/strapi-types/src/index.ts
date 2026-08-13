@@ -70,9 +70,7 @@ type DeepFallbackResult<T> = T extends Primitive
       ? DeepFallbackResult<TItem>[]
       : T extends object
         ? {
-            [TKey in keyof T as TKey extends FallbackInternalKey
-              ? never
-              : TKey]?: DeepFallbackResult<T[TKey]>;
+            [TKey in keyof T]?: DeepFallbackResult<T[TKey]>;
           }
         : T;
 

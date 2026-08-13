@@ -1,5 +1,7 @@
+import { FALLBACK_HOME_PAGE } from "@/lib/fallbacks";
 import { fetchPage } from "@/lib/strapi-api/content/server";
 import { ROOT_PAGE_PATH } from "@workspace/shared-data";
+import { Result } from "@workspace/strapi-types";
 import { notFound } from "next/navigation";
 import { type FC, use } from "react";
 import ErrorBoundry from "../elementary/ErrorBoundry";
@@ -18,8 +20,12 @@ const StrapiPageView: FC<StrapiPageViewProps> = ({ params, searchParams }) => {
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/");
   const response = use(fetchPage(fullPath, locale));
+  const isRootPage = fullPath === ROOT_PAGE_PATH;
 
-  const data = response?.data;
+  const data = isRootPage
+    ? (response?.data ?? (FALLBACK_HOME_PAGE as Result<"api::page.page">))
+    : response?.data;
+
   if (data?.blocks == null) {
     notFound();
   }

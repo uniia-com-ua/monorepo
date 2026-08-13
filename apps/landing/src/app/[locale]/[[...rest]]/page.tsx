@@ -32,11 +32,7 @@ export async function generateStaticParams({
         page.slug === "/" ? [] : (page.slug?.split("/").filter(Boolean) ?? []),
     })) ?? [];
 
-  if (params.length > 0) {
-    return params;
-  }
-
-  // @todo: handle static export
+  return params;
 }
 
 export async function generateMetadata(

@@ -3,17 +3,53 @@ import { StrapiFooter } from "@/components/page-builder/single-types/StrapiFoote
 import { StrapiNavbar } from "@/components/page-builder/single-types/StrapiNavbar";
 import ServerProviders from "@/components/providers/ServerProviders";
 import { isValidLocale, routing } from "@/lib/i18n/routing";
+import { fetchGlobalConfig } from "@/lib/strapi-api/content/server";
+import { formatStrapiMediaUrl } from "@/lib/strapi-api/media";
 import "@workspace/ui/globals.css";
 import { cn } from "@workspace/ui/lib/utils";
+import { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 
 export function generateStaticParams() {
   const locales = routing.locales.map((locale) => ({ locale }));
 
   return locales;
+}
+
+export async function generateMetadata(props: LayoutProps<"/[locale]">): Promise<Metadata | null> {
+  const { locale } = await props.params;
+  if (!isValidLocale(locale)) {
+    return null;
+  }
+
+  const response = await fetchGlobalConfig(locale, {
+    defaultSeo: "smart",
+  })
+
+  return {
+    title: {
+      default: response.data?.defaultSeo?.title ?? "",
+      template: `%s | ${response.data?.defaultSeo?.title ?? ""}`,
+    },
+    description: response.data?.defaultSeo?.description ?? "",
+    keywords: response.data?.defaultSeo?.keywords ?? "",
+    openGraph: {
+      title: response.data?.defaultSeo?.title ?? "",
+      description: response.data?.defaultSeo?.description ?? "",
+      images: response.data?.defaultSeo?.ogImage ? [
+        {url: formatStrapiMediaUrl(response.data.defaultSeo.ogImage.url) ?? ""}
+      ] : [],
+    },
+    twitter: {
+      title: response.data?.defaultSeo?.title ?? "",
+      description: response.data?.defaultSeo?.description ?? "",
+      images: response.data?.defaultSeo?.ogImage ? [
+        {url: formatStrapiMediaUrl(response.data.defaultSeo.ogImage.url) ?? ""}
+      ] : [],
+    }
+  }
 }
 
 const ukraineSans = localFont({
@@ -66,8 +102,6 @@ export default async function RootLayout({
   if (!isValidLocale(locale)) {
     notFound();
   }
-
-  const CSR_ENVs = ["NODE_ENV"];
 
   return (
     <html lang={locale} suppressHydrationWarning>

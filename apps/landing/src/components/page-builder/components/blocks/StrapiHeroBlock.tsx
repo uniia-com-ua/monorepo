@@ -29,7 +29,7 @@ export async function StrapiHeroBlock({
         text: btn.text || "",
         href: btn.href || "",
         scrollTo: btn.scrollTo || "",
-        variant: btn.variant || "primary",
+        variant: btn.variant ?? undefined,
       }))}
     />
   );

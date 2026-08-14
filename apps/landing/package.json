@@ -16,6 +16,7 @@
     "@workspace/shared-data": "workspace:*",
     "@workspace/strapi": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "lodash": "^4.18.1",
     "lucide-react": "^0.475.0",
     "next": "^16.0.0",
     "next-intl": "^4.13.6",
@@ -27,6 +28,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.25",
     "@types/node": "^20.19.32",
     "@types/qs": "^6.14.0",
     "@types/react": "^19.2.13",

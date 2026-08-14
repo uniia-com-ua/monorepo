@@ -17,10 +17,12 @@ export default getRequestConfig(async ({ locale }) => {
   return {
     locale,
     messages: (
-      await (locale === "en"
-        ? import("../../../locales/en.json")
+      await (locale === "uk"
+        ? import(`../../../locales/uk.json`) // for hmr
         : import(`../../../locales/${locale}.json`))
     ).default,
+    getMessageFallback: ({ namespace, key }) =>
+      namespace ? `${namespace}.${key}` : key,
     timeZone: "Europe/Kiev", // fix this to Kyiv pls, time to change ISO stuff, petition anyone?
   };
 });

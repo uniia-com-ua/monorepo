@@ -1,1 +1,17 @@
-{}
+{
+  "seo": {
+    "metaTitle": "",
+    "metaDescription": "",
+    "metaKeywords": "",
+
+    "og": {
+      "siteName": "",
+      "title": "",
+      "description": ""
+    },
+    "twitter": {
+      "title": "",
+      "description": ""
+    }
+  }
+}

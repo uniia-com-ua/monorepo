@@ -6,6 +6,7 @@ export const routing = defineRouting({
   locales: ["en", "uk"],
   defaultLocale: "uk",
   localePrefix: "as-needed",
+  localeCookie: false,
 });
 
 export const isValidLocale = (locale: string): locale is Locale => {

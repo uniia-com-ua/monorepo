@@ -19,7 +19,7 @@ pnpm install
 
 Для запуску БД використовується Docker. Якщо у вас немає Docker або Docker Desktop, встановіть його з [офіційного сайту](https://www.docker.com/products/docker-desktop/). Перед запуском Strapi переконайтеся, що Docker запущено.
 
-3. Створити `.env.local` файл у `apps/strapi` на основі `.env.local.example` та заповнити секрети (`APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`) у файлі.
+3. Створити `.env` файл у `apps/strapi` на основі `.env.example` та заповнити секрети (`APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`) у файлі.
 
 4. Запустити Strapi:
 

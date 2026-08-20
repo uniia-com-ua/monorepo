@@ -10,7 +10,16 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g turbo@^2
 COPY . .
+
+# Generated Strapi types are git-tracked in apps/strapi, then linked/copied into
+# packages/strapi-types/generated (gitignored) for local `dev`. `turbo prune`
+# omits gitignored files and does not include apps/strapi, so next build would
+# fail to resolve `@workspace/strapi-types` unless we restore them here.
+RUN node packages/strapi-types/scripts/sync-types.mjs strapi
 RUN turbo prune landing --docker
+RUN mkdir -p /app/out/full/packages/strapi-types \
+  && rm -rf /app/out/full/packages/strapi-types/generated \
+  && cp -R /app/packages/strapi-types/generated /app/out/full/packages/strapi-types/generated
 
 FROM base AS installer
 RUN apk add --no-cache libc6-compat

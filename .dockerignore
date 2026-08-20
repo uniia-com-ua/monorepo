@@ -11,6 +11,7 @@ dist
 .vscode
 .cursor
 .agents
+.prune-out
 **/*.log
 .env
 .env.local

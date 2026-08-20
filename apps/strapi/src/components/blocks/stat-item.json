@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blocks_stat_items",
+  "info": {
+    "displayName": "stat-item",
+    "icon": "dashboard"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

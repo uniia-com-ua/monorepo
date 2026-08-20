@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_blocks_benefit_items",
+  "info": {
+    "displayName": "benefit-item"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

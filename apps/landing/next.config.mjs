@@ -1,7 +1,9 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
-  transpilePackages: ["@workspace/ui", "@workspace/strapi"],
+  transpilePackages: ["@workspace/ui", "@workspace/strapi", "@workspace/strapi-types"],
   images: {
     localPatterns: [
       {
@@ -25,4 +27,6 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
+
+export default withNextIntl(nextConfig);

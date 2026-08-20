@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_blocks_about_cards",
+  "info": {
+    "displayName": "about-cards",
+    "icon": "apps"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "subheading": {
+      "type": "text"
+    },
+    "cards": {
+      "type": "component",
+      "component": "blocks.about-card-item",
+      "repeatable": true,
+      "required": true
+    }
+  },
+  "config": {}
+}

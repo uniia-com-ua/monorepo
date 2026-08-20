@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_global_footers",
+  "info": {
+    "displayName": "footer",
+    "icon": "stack"
+  },
+  "options": {},
+  "attributes": {
+    "columns": {
+      "type": "component",
+      "component": "footer.column",
+      "repeatable": true
+    },
+    "socialLinks": {
+      "type": "component",
+      "component": "footer.social-link",
+      "repeatable": true
+    },
+    "copyright": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

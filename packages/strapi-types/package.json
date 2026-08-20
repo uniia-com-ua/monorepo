@@ -1,0 +1,28 @@
+{
+  "name": "@workspace/strapi-types",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts"
+    },
+    "./generated/components": {
+      "types": "./generated/components.d.ts"
+    },
+    "./generated/contentTypes": {
+      "types": "./generated/contentTypes.d.ts"
+    }
+  },
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'This package is only for types, no build step is required.'",
+    "dev": "node scripts/link-types.mjs strapi"
+  },
+  "devDependencies": {
+    "@strapi/strapi": "5.41.1",
+    "@workspace/typescript-config": "workspace:^"
+  },
+  "dependencies": {
+    "@notum-cz/strapi-plugin-smart-populate": "^1.0.1"
+  }
+}

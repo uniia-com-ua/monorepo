@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_blocks_feedback_forms",
+  "info": {
+    "displayName": "feedback-form",
+    "icon": "envelop"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "text"
+    },
+    "benefitsHeading": {
+      "type": "string"
+    },
+    "benefits": {
+      "type": "component",
+      "component": "blocks.benefit-item",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

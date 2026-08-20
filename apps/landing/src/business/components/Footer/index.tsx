@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface FooterLink {
   label: string;
@@ -39,10 +39,10 @@ export default function Footer({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-white text-foreground">
+    <footer className="text-foreground w-full bg-white">
       {/* ---- Top section ---- */}
-      <div className="max-w-container mx-auto px-4 pt-12 pb-8 md:pt-16 md:pb-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 items-start">
+      <div className="max-w-container mx-auto px-4 pb-8 pt-12 md:pb-10 md:pt-16">
+        <div className="grid grid-cols-2 items-start gap-8 md:grid-cols-4 md:gap-12">
           {/* Logo & socials */}
           <div className="flex flex-col gap-5">
             <Link href="/" aria-label="Унія">
@@ -63,7 +63,7 @@ export default function Footer({
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 bg-muted rounded-sm hover:bg-muted/80 transition-colors"
+                    className="bg-muted hover:bg-muted/80 flex h-10 w-10 items-center justify-center rounded-sm transition-colors"
                     aria-label={social.icon?.alternativeText || "Social link"}
                   >
                     {social.icon?.url && (
@@ -81,17 +81,17 @@ export default function Footer({
           </div>
 
           {/* Navigation columns */}
-          {columns.map((col) => (
-            <div key={col.title}>
-              <h4 className="text-base font-semibold text-foreground mb-4">
+          {columns.map((col, index) => (
+            <div key={`${col.title}-${index}`}>
+              <h4 className="text-foreground mb-4 text-base font-semibold">
                 {col.title}
               </h4>
               <ul className="space-y-2.5">
-                {col.links.map((link) => (
-                  <li key={link.href}>
+                {col.links.map((link, linkIndex) => (
+                  <li key={`${link.href}-${linkIndex}`}>
                     <Link
                       href={link.href}
-                      className="text-sm text-foreground/60 hover:text-foreground transition-colors"
+                      className="text-foreground/60 hover:text-foreground text-sm transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -104,19 +104,19 @@ export default function Footer({
       </div>
 
       {/* ---- Bottom bar ---- */}
-      <div className="border-t border-border">
-        <div className="max-w-container mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-foreground/50">
+      <div className="border-border border-t">
+        <div className="max-w-container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-5 sm:flex-row">
+          <p className="text-foreground/50 text-sm">
             {copyright || `uniia.com.ua © ${year}`}
           </p>
 
           {bottomLinks.length > 0 && (
             <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              {bottomLinks.map((link) => (
+              {bottomLinks.map((link, index) => (
                 <Link
-                  key={link.href}
+                  key={`${link.href}-${index}`}
                   href={link.href}
-                  className="text-sm text-foreground/50 hover:text-foreground transition-colors"
+                  className="text-foreground/50 hover:text-foreground text-sm transition-colors"
                 >
                   {link.label}
                 </Link>

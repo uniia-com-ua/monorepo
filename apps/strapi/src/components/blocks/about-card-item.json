@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_blocks_about_card_items",
+  "info": {
+    "displayName": "about-card-item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "variant": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "cta": {
+      "type": "string"
+    },
+    "scrollTarget": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

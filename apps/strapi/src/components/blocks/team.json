@@ -1,0 +1,48 @@
+{
+  "collectionName": "components_blocks_teams",
+  "info": {
+    "displayName": "team",
+    "icon": "user"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": false
+    },
+    "subheading": {
+      "type": "text"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    },
+    "infoTitle": {
+      "type": "string"
+    },
+    "infoDescription": {
+      "type": "text"
+    },
+    "stats": {
+      "type": "component",
+      "component": "blocks.stat-item",
+      "repeatable": true
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaDescription": {
+      "type": "text"
+    },
+    "ctaButton": {
+      "type": "component",
+      "component": "shared.cta-button",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

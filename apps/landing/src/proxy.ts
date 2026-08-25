@@ -7,7 +7,9 @@ const intlProxy = createMiddleware(routing);
 
 const proxies: ((
   req: NextRequest,
-) => NextResponse | null | Promise<NextResponse | null>)[] = [httpsRedirect]; // for future use, if we want to add more proxies
+) => NextResponse | null | Promise<NextResponse | null>)[] = [
+  // httpsRedirect // @note: Disabled for now, see: https://t.me/c/3749132802/2/1854
+]; // for future use, if we want to add more proxies
 
 export default async function proxy(req: NextRequest) {
   let response: NextResponse | null = null;

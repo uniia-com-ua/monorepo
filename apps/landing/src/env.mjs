@@ -6,8 +6,8 @@ export const env = createEnv({
 
   server: {
     STRAPI_URL: z.string().url().optional(),
-    STRAPI_REST_READONLY_API_KEY: z.string().optional(),
-    STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
+    STRAPI_API_TOKEN: z.string().optional(),
+    STRAPI_API_CUSTOM_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
@@ -19,8 +19,8 @@ export const env = createEnv({
   runtimeEnv: {
     // Server-side environment variables
     STRAPI_URL: process.env.STRAPI_URL,
-    STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
-    STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
+    STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
+    STRAPI_API_CUSTOM_TOKEN: process.env.STRAPI_API_CUSTOM_TOKEN,
 
     // Client-side environment variables
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,

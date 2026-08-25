@@ -26,7 +26,7 @@ export const createStrapiAuthHeader = async ({
   isReadOnly: boolean;
 }) => {
   const apiToken = getEnvVar(
-    isReadOnly ? "STRAPI_REST_READONLY_API_KEY" : "STRAPI_REST_CUSTOM_API_KEY",
+    isReadOnly ? "STRAPI_API_TOKEN" : "STRAPI_API_CUSTOM_TOKEN",
   );
 
   return formatStrapiAuthHeader(apiToken);

@@ -38,7 +38,7 @@ pnpm dev:strapi
 
 ```bash
 STRAPI_URL=http://localhost:1337
-STRAPI_REST_READONLY_API_KEY=<вставте-скопійований-токен-тут>
+STRAPI_API_TOKEN=<вставте-скопійований-токен-тут>
 ```
 
 7. Запустити лендінг:

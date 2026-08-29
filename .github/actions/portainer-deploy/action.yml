@@ -49,9 +49,16 @@ runs:
         PAYLOAD=$(jq -n --arg file "${FILE}" --argjson env "${ENV_JSON}" \
           '{stackFileContent:$file, env:$env, prune:false, pullImage:true}')
 
-        curl -sk -f -X PUT -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
+        HTTP_CODE=$(curl -sk -o /tmp/portainer-deploy-body.txt -w "%{http_code}" \
+          -X PUT -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
           -H "Content-Type: application/json" \
           "${PORTAINER_URL}/api/stacks/${STACK_ID}?endpointId=${ENDPOINT_ID}" \
-          -d "${PAYLOAD}"
+          -d "${PAYLOAD}")
 
-        echo "Redeploy triggered."
+        if [ "${HTTP_CODE}" -lt 200 ] || [ "${HTTP_CODE}" -ge 300 ]; then
+          echo "Portainer PUT failed with HTTP ${HTTP_CODE}"
+          cat /tmp/portainer-deploy-body.txt
+          exit 1
+        fi
+
+        echo "Redeploy triggered (HTTP ${HTTP_CODE})."

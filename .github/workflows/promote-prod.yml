@@ -13,18 +13,12 @@ permissions:
   packages: write
 
 jobs:
-  build-and-push-prod:
-    name: Build Production Image
+  version:
+    name: Resolve version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-
     steps:
-      - name: Checkout tag
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.tag }}
-
       - name: Extract version from tag
         id: version
         run: |
@@ -32,8 +26,42 @@ jobs:
           VERSION="${VERSION#v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      # Rebuilt (not re-tagged) against the PRODUCTION Strapi, since Next.js
-      # statically pre-renders pages at build time — see apps/landing/Dockerfile.
+  deploy-strapi-prod:
+    name: Deploy Strapi to Production
+    needs: version
+    runs-on: [self-hosted, uniia-deploy]
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Update strapi-prod stack
+        uses: ./.github/actions/portainer-deploy
+        with:
+          portainer-url: ${{ secrets.PORTAINER_URL }}
+          api-token: ${{ secrets.PORTAINER_API_TOKEN }}
+          stack-id: ${{ secrets.PORTAINER_STRAPI_PROD_STACK_ID }}
+          endpoint-id: ${{ secrets.PORTAINER_ENDPOINT_ID }}
+          tag-env-name: STRAPI_TAG
+          new-tag: ${{ needs.version.outputs.version }}
+
+      - name: Wait for production Strapi
+        uses: ./.github/actions/wait-health
+        with:
+          url: https://cms.uniia.com.ua/_health
+          expected-status: "204"
+
+  build-landing-prod:
+    name: Build landing production image
+    needs: [version, deploy-strapi-prod]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -44,51 +72,39 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push production image
+      - name: Build and push landing production image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: apps/landing/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}/landing:${{ needs.version.outputs.version }}
+            ghcr.io/${{ github.repository }}/landing:latest
           build-args: |
             STRAPI_URL=https://cms.uniia.com.ua
             STRAPI_API_TOKEN=${{ secrets.STRAPI_API_TOKEN_PROD }}
             NEXT_PUBLIC_SITE_URL=https://uniia.com.ua
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=landing
+          cache-to: type=gha,mode=max,scope=landing
           platforms: linux/amd64
 
-  deploy-prod:
-    name: Deploy to Production
-    needs: build-and-push-prod
+  deploy-landing-prod:
+    name: Deploy landing to Production
+    needs: [version, build-landing-prod]
     runs-on: [self-hosted, uniia-deploy]
     steps:
-      - name: Update landing-prod stack in Portainer
-        env:
-          PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
-          PORTAINER_API_TOKEN: ${{ secrets.PORTAINER_API_TOKEN }}
-          STACK_ID: ${{ secrets.PORTAINER_LANDING_PROD_STACK_ID }}
-          ENDPOINT_ID: ${{ secrets.PORTAINER_ENDPOINT_ID }}
-          NEW_TAG: ${{ needs.build-and-push-prod.outputs.version }}
-        run: |
-          set -euo pipefail
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
 
-          echo "Deploying landing:${NEW_TAG} to production (stack ${STACK_ID})"
-
-          FILE=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}/file" | jq -r '.StackFileContent')
-
-          ENV_JSON=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}" \
-            | jq --arg tag "${NEW_TAG}" '.Env | map(if .name=="LANDING_TAG" then .value=$tag else . end)')
-
-          PAYLOAD=$(jq -n --arg file "${FILE}" --argjson env "${ENV_JSON}" \
-            '{stackFileContent:$file, env:$env, prune:false, pullImage:true}')
-
-          curl -sk -f -X PUT -H "X-API-Key: ${PORTAINER_API_TOKEN}" -H "Content-Type: application/json" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}?endpointId=${ENDPOINT_ID}" -d "${PAYLOAD}"
-
-          echo "Production redeploy triggered."
+      - name: Update landing-prod stack
+        uses: ./.github/actions/portainer-deploy
+        with:
+          portainer-url: ${{ secrets.PORTAINER_URL }}
+          api-token: ${{ secrets.PORTAINER_API_TOKEN }}
+          stack-id: ${{ secrets.PORTAINER_LANDING_PROD_STACK_ID }}
+          endpoint-id: ${{ secrets.PORTAINER_ENDPOINT_ID }}
+          tag-env-name: LANDING_TAG
+          new-tag: ${{ needs.version.outputs.version }}

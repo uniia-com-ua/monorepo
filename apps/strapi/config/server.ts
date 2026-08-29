@@ -3,6 +3,10 @@ import type { Core } from '@strapi/strapi';
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
+  // Public origin the app is reachable at (e.g. https://cms.example.com) and
+  // proxy trust, required so admin/API URLs resolve correctly behind Traefik + Cloudflare Tunnel.
+  url: env('PUBLIC_URL', undefined),
+  proxy: env.bool('IS_PROXIED', true),
   app: {
     keys: env.array('APP_KEYS')!,
   },

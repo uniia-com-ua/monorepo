@@ -1,0 +1,57 @@
+name: Deploy Portainer stack
+description: Update a Portainer stack env tag and trigger a pull+redeploy
+
+inputs:
+  portainer-url:
+    description: Portainer base URL (e.g. https://localhost:9443)
+    required: true
+  api-token:
+    description: Portainer API token
+    required: true
+  stack-id:
+    description: Portainer stack ID
+    required: true
+  endpoint-id:
+    description: Portainer endpoint ID
+    required: true
+  tag-env-name:
+    description: Stack env var that holds the image tag (STRAPI_TAG or LANDING_TAG)
+    required: true
+  new-tag:
+    description: Tag value to set
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Update stack in Portainer
+      shell: bash
+      env:
+        PORTAINER_URL: ${{ inputs.portainer-url }}
+        PORTAINER_API_TOKEN: ${{ inputs.api-token }}
+        STACK_ID: ${{ inputs.stack-id }}
+        ENDPOINT_ID: ${{ inputs.endpoint-id }}
+        TAG_ENV_NAME: ${{ inputs.tag-env-name }}
+        NEW_TAG: ${{ inputs.new-tag }}
+      run: |
+        set -euo pipefail
+
+        echo "Deploying ${TAG_ENV_NAME}=${NEW_TAG} to stack ${STACK_ID}"
+
+        FILE=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
+          "${PORTAINER_URL}/api/stacks/${STACK_ID}/file" | jq -r '.StackFileContent')
+
+        ENV_JSON=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
+          "${PORTAINER_URL}/api/stacks/${STACK_ID}" \
+          | jq --arg tag "${NEW_TAG}" --arg name "${TAG_ENV_NAME}" \
+            '.Env | map(if .name==$name then .value=$tag else . end)')
+
+        PAYLOAD=$(jq -n --arg file "${FILE}" --argjson env "${ENV_JSON}" \
+          '{stackFileContent:$file, env:$env, prune:false, pullImage:true}')
+
+        curl -sk -f -X PUT -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
+          -H "Content-Type: application/json" \
+          "${PORTAINER_URL}/api/stacks/${STACK_ID}?endpointId=${ENDPOINT_ID}" \
+          -d "${PAYLOAD}"
+
+        echo "Redeploy triggered."

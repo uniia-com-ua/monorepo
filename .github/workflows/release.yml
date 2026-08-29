@@ -10,19 +10,17 @@ permissions:
   packages: write
 
 jobs:
-  build-and-release:
-    name: Build, Release & Publish Staging Image
+  release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # --- Extract version info from tag ---
       - name: Extract version from tag
         id: version
         run: |
@@ -37,7 +35,6 @@ jobs:
             echo "prerelease=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # --- Generate changelog from commits since last tag ---
       - name: Generate changelog
         id: changelog
         run: |
@@ -61,7 +58,6 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # --- Create GitHub Release ---
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -74,10 +70,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- Build the Next.js "landing" app against the STAGING Strapi and push to GHCR ---
-      # Next.js statically pre-renders pages at build time, so the image is baked
-      # against one specific Strapi instance. Staging and production are therefore
-      # built as separate images (see promote-prod.yml for the production build).
+  build-strapi:
+    name: Build Strapi image
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -88,50 +88,88 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push staging image
+      - name: Build and push Strapi image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/strapi/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/strapi:${{ needs.release.outputs.version }}
+          cache-from: type=gha,scope=strapi
+          cache-to: type=gha,mode=max,scope=strapi
+          platforms: linux/amd64
+
+  deploy-strapi-staging:
+    name: Deploy Strapi to Staging
+    needs: [release, build-strapi]
+    runs-on: [self-hosted, uniia-deploy]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update strapi-staging stack
+        uses: ./.github/actions/portainer-deploy
+        with:
+          portainer-url: ${{ secrets.PORTAINER_URL }}
+          api-token: ${{ secrets.PORTAINER_API_TOKEN }}
+          stack-id: ${{ secrets.PORTAINER_STRAPI_STAGING_STACK_ID }}
+          endpoint-id: ${{ secrets.PORTAINER_ENDPOINT_ID }}
+          tag-env-name: STRAPI_TAG
+          new-tag: ${{ needs.release.outputs.version }}
+
+      - name: Wait for staging Strapi
+        uses: ./.github/actions/wait-health
+        with:
+          url: https://cms-test.uniia.com.ua/_health
+          expected-status: "204"
+
+  build-landing-staging:
+    name: Build landing staging image
+    needs: [release, deploy-strapi-staging]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push landing staging image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: apps/landing/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}-staging
+          tags: ghcr.io/${{ github.repository }}/landing:${{ needs.release.outputs.version }}-staging
           build-args: |
             STRAPI_URL=https://cms-test.uniia.com.ua
             STRAPI_API_TOKEN=${{ secrets.STRAPI_API_TOKEN_STAGING }}
             NEXT_PUBLIC_SITE_URL=https://test.uniia.com.ua
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=landing
+          cache-to: type=gha,mode=max,scope=landing
           platforms: linux/amd64
 
-  # --- Auto-deploy the freshly built staging image (production stays manual, see promote-prod.yml) ---
-  deploy-staging:
-    name: Auto-deploy to Staging
-    needs: build-and-release
+  deploy-landing-staging:
+    name: Deploy landing to Staging
+    needs: [release, build-landing-staging]
     runs-on: [self-hosted, uniia-deploy]
     steps:
-      - name: Update landing-staging stack in Portainer
-        env:
-          PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
-          PORTAINER_API_TOKEN: ${{ secrets.PORTAINER_API_TOKEN }}
-          STACK_ID: ${{ secrets.PORTAINER_LANDING_STAGING_STACK_ID }}
-          ENDPOINT_ID: ${{ secrets.PORTAINER_ENDPOINT_ID }}
-          NEW_TAG: ${{ needs.build-and-release.outputs.version }}-staging
-        run: |
-          set -euo pipefail
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          echo "Deploying landing:${NEW_TAG} to staging (stack ${STACK_ID})"
-
-          FILE=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}/file" | jq -r '.StackFileContent')
-
-          ENV_JSON=$(curl -sk -f -H "X-API-Key: ${PORTAINER_API_TOKEN}" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}" \
-            | jq --arg tag "${NEW_TAG}" '.Env | map(if .name=="LANDING_TAG" then .value=$tag else . end)')
-
-          PAYLOAD=$(jq -n --arg file "${FILE}" --argjson env "${ENV_JSON}" \
-            '{stackFileContent:$file, env:$env, prune:false, pullImage:true}')
-
-          curl -sk -f -X PUT -H "X-API-Key: ${PORTAINER_API_TOKEN}" -H "Content-Type: application/json" \
-            "${PORTAINER_URL}/api/stacks/${STACK_ID}?endpointId=${ENDPOINT_ID}" -d "${PAYLOAD}"
-
-          echo "Staging redeploy triggered."
+      - name: Update landing-staging stack
+        uses: ./.github/actions/portainer-deploy
+        with:
+          portainer-url: ${{ secrets.PORTAINER_URL }}
+          api-token: ${{ secrets.PORTAINER_API_TOKEN }}
+          stack-id: ${{ secrets.PORTAINER_LANDING_STAGING_STACK_ID }}
+          endpoint-id: ${{ secrets.PORTAINER_ENDPOINT_ID }}
+          tag-env-name: LANDING_TAG
+          new-tag: ${{ needs.release.outputs.version }}-staging

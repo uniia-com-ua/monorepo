@@ -1,0 +1,53 @@
+name: Wait for HTTP health
+description: Poll a URL until it returns an expected status code
+
+inputs:
+  url:
+    description: Health-check URL
+    required: true
+  expected-status:
+    description: HTTP status considered healthy
+    required: false
+    default: "204"
+  timeout-seconds:
+    description: Give up after this many seconds
+    required: false
+    default: "300"
+  interval-seconds:
+    description: Delay between attempts
+    required: false
+    default: "5"
+
+runs:
+  using: composite
+  steps:
+    - name: Wait until endpoint is healthy
+      shell: bash
+      env:
+        HEALTH_URL: ${{ inputs.url }}
+        EXPECTED_STATUS: ${{ inputs.expected-status }}
+        TIMEOUT_SECONDS: ${{ inputs.timeout-seconds }}
+        INTERVAL_SECONDS: ${{ inputs.interval-seconds }}
+      run: |
+        set -euo pipefail
+
+        echo "Waiting for ${HEALTH_URL} to return ${EXPECTED_STATUS} (timeout ${TIMEOUT_SECONDS}s)"
+        start=$(date +%s)
+
+        while true; do
+          code=$(curl -sk -o /dev/null -w "%{http_code}" --max-time 10 "${HEALTH_URL}" || true)
+          if [ "${code}" = "${EXPECTED_STATUS}" ]; then
+            echo "Healthy: ${HEALTH_URL} returned ${code}"
+            exit 0
+          fi
+
+          now=$(date +%s)
+          elapsed=$((now - start))
+          if [ "${elapsed}" -ge "${TIMEOUT_SECONDS}" ]; then
+            echo "Timed out after ${elapsed}s waiting for ${HEALTH_URL} (last status: ${code:-none})"
+            exit 1
+          fi
+
+          echo "Not ready yet (status=${code:-none}), retrying in ${INTERVAL_SECONDS}s..."
+          sleep "${INTERVAL_SECONDS}"
+        done

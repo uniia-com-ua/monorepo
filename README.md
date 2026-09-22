@@ -80,6 +80,10 @@ pnpm install <package-name> --filter <app-name>
 pnpm install react-hook-form --filter landing
 ```
 
+## Розробка компонентів, які працюють з Strapi
+
+Процес створення компонентів, які працюють з CMS Strapi, описаний у [README.md](./apps/landing/src/components/page-builder/README.md) файлі у папці `page-builder`.
+
 ---
 
 Вимоги: Node >= 20, pnpm (вказано у `packageManager`), встановити залежності в корені.

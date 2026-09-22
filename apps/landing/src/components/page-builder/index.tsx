@@ -3,6 +3,7 @@ import { StrapiAboutBlock } from "./components/blocks/StrapiAboutBlock";
 import { StrapiFeedbackForm } from "./components/blocks/StrapiFeedbackForm";
 import { StrapiHeroBlock } from "./components/blocks/StrapiHeroBlock";
 import { StrapiTeamBlock } from "./components/blocks/StrapiTeamBlock";
+import { StrapiRichText } from "./components/shared/StrapiRichText";
 
 export const PageContentComponents: Partial<
   Record<UID.Component, React.ComponentType<any>>
@@ -11,4 +12,5 @@ export const PageContentComponents: Partial<
   "blocks.about-cards": StrapiAboutBlock,
   "blocks.team": StrapiTeamBlock,
   "blocks.feedback-form": StrapiFeedbackForm,
+  "shared.rich-text": StrapiRichText,
 };

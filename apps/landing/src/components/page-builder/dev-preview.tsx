@@ -1,6 +1,12 @@
 import { PageBuilderComponentProps } from "@/types/general";
 import type { Data, UID } from "@workspace/strapi-types";
 
+type ComponentData<TUID extends string> = TUID extends UID.Component
+  ? Data.Component<TUID>
+  : {};
+
+type ComponentUID = UID.Component | (string & {});
+
 class PageBuilderClass {
   previewComponents: Record<
     string,
@@ -17,20 +23,20 @@ class PageBuilderClass {
   // It also registers the component in the previewComponents map for dev preview route
   // fallback type should be inferred from the component type, so that it can be used in the dev preview route
 
-  new<TUID extends UID.Component>(
+  new<TUID extends ComponentUID>(
     componentUID: TUID,
     Component: React.ComponentType<
-      PageBuilderComponentProps & { component: Data.Component<TUID> }
+      PageBuilderComponentProps & { component: ComponentData<TUID> }
     >,
   ): React.ComponentType<
-    PageBuilderComponentProps & { component: Data.Component<TUID> }
-  > & { fallback?: Data.Component<TUID> } {
+    PageBuilderComponentProps & { component: ComponentData<TUID> }
+  > & { fallback?: ComponentData<TUID> } {
     const PreviewComponent: React.ComponentType<
-      PageBuilderComponentProps & { component: Data.Component<TUID> }
+      PageBuilderComponentProps & { component: ComponentData<TUID> }
     > & {
-      fallback?: Data.Component<TUID>;
+      fallback?: ComponentData<TUID>;
     } = (
-      props: PageBuilderComponentProps & { component: Data.Component<TUID> },
+      props: PageBuilderComponentProps & { component: ComponentData<TUID> },
     ) => {
       return <Component {...props} />;
     };
